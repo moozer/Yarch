@@ -63,55 +63,67 @@ Data3Result =  [
     {'mtime': datetime.datetime(2010, 5, 15, 21, 37, 57), 'md5': '0878403390b7e5f02a7d7fc0ebc85939', 
         'file': 'file2.txt', 'size': 9L}]
 
-class testmd5Dirlist(unittest.TestCase):                           
+class testmd5Dirlist(unittest.TestCase):
+    def setUp( self ):
+        # Running a script to init data.      
+        self._CurrentDir = os.getcwd()
+        try:
+            os.chdir('tests')
+        except OSError:
+            pass
+        
+    def tearDown( self):
+        # run script to undo stuff in setUp
+        os.chdir( self._CurrentDir )
+                          
     def testInstantiate( self ):
-        """ Simple instantiation and basedir check """
+        """ Dirlist : Simple instantiation and basedir check """
         dl = Dirlist( Data1Dir )
         self.assertEqual( dl.getBasedir(), Data1Dir, "Basedir and supplied dir does not match");
 
     def testBadInstantiate( self ):
-        """ Simple instantiation and basedir check of bad basedir """
+        """ Dirlist : Simple instantiation and basedir check of bad basedir """
         self.assertRaises( DirlistError, Dirlist, DirNonExist)
         
     def testGenerateDirlist( self ):
-        ''' create the dirlistfile '''
+        ''' Dirlist : create the dirlistfile '''
         dl = Dirlist( Data1Dir )
         res = dl.createDirlist()
         #self.assertEqual( res, Data1Result, "Processed data does not match expectations" )
         self.assertEqual( res, Data1Result )
 
     def testDirlistOutput( self ):
-        ''' Testing file content output function '''
+        ''' Dirlist : Testing file content output function '''
         dl = Dirlist( Data1Dir )
         DirlistData = dl.createDirlist()
         output = dl.generateOutput( DirlistData )
         self.assertEqual( output, Data1Output, "Output does not match expectations" )
 
     def testGetDirlistFromOutput( self ):
-        ''' test use the output to return to the processed data '''
+        ''' Dirlist : test use the output to return to the processed data '''
         dl = Dirlist( Data1Dir )
         DirlistData = dl.createDirlist()
         Output = dl.generateOutput( DirlistData )
         self.assertEqual( dl.extractDirlist( Output ), DirlistData, "Extracted data does not match input" )
         
     def testCheckExistingDirlistFile( self ):
-        ''' check for existing dirlist file '''
+        ''' Dirlist : check for existing dirlist file '''
         dl = Dirlist( Data2Dir )
         self.assertTrue( dl.isDirlistPresent() )        
 
     def testCheckNonexistingDirlistFile( self ):
-        ''' check for non-existing dirlist file '''
+        ''' Dirlist : check for non-existing dirlist file '''
         dl = Dirlist( Data1Dir )
         self.assertFalse( dl.isDirlistPresent() ) 
         
     def testGetDirlistFromFile( self ):
-        ''' test reads the dirlist from file '''
+        ''' Dirlist : test reads the dirlist from file '''
         dl = Dirlist( Data2Dir )
         self.assertEqual( dl.readDirlistFromFile(), Data2Result )
         #self.assertEqual( dl.readDirlistFromFile(), Data2Result, "Bad data read from dirlist file" )
         
     def testWriteDirlistToFile( self ):
-        ''' test writes the dirlist to file '''
+        ''' Dirlist : test writes the dirlist to file '''
         # cleanup before we start
         if os.path.isfile( os.path.join( Data1Dir, '.dirlist.md5' ) ):
             os.remove( os.path.join( Data1Dir, '.dirlist.md5' ) )
@@ -126,7 +138,7 @@ class testmd5Dirlist(unittest.TestCase):
         os.remove( os.path.join( Data1Dir, '.dirlist.md5' ) )
         
     def testGetDirlistNoFile( self ):
-        ''' testing the getDirlist function for directory with no dirlist file '''
+        ''' Dirlist : testing the getDirlist function for directory with no dirlist file '''
         dl = Dirlist( Data1Dir )
         res = dl.getDirlist()
         #~ print dl.generateOutput( res )
@@ -135,12 +147,12 @@ class testmd5Dirlist(unittest.TestCase):
         os.remove( os.path.join( Data1Dir, '.dirlist.md5' ) )
   
     def testGetDirlistUsingFile( self ):
-        ''' testing the getDirlist function for directory with a dirlist file '''
+        ''' Dirlist : testing the getDirlist function for directory with a dirlist file '''
         dl = Dirlist( Data2Dir )
         self.assertEqual( dl.getDirlist(), Data2Result, "Bad data read from dirlist file" )
         
     def testGetDirlistBadLink( self ):
-        ''' testing the getDirlist function for directory with a bad link '''
+        ''' Dirlist : testing the getDirlist function for directory with a bad link '''
         if os.path.isfile( os.path.join( Data3Dir, '.dirlist.md5' ) ):
             os.remove( os.path.join( Data3Dir, '.dirlist.md5' ) )
   
