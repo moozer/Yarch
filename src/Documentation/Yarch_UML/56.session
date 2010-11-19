@@ -1,0 +1,14 @@
+window_sizes 1280 756 300 970 658 0
+diagrams
+  activitydiagram_ref 134712 // Process directory
+    776 526 100 4 60 0
+  active  activitydiagram_ref 134584 // Process file
+    970 658 100 4 0 0
+end
+show_stereotypes
+selected activitydiagram_ref 134584 // Process file
+open
+  activityaction_ref 141624 // activity action Process file
+  classview_ref 128056 // rf
+end
+end

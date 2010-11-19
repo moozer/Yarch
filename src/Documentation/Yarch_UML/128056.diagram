@@ -1,0 +1,42 @@
+format 70
+
+activitynodecanvas 128056 activitynode_ref 128056 // initial
+  xyz 144 32 2000
+end
+activitynodecanvas 128184 activitynode_ref 128184 // decision
+  xyz 236 23 2000
+end
+activityactioncanvas 128568 activityaction_ref 128056 // activity action Get all files
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 349 10 2000 101 61
+end
+activitynodecanvas 128824 activitynode_ref 134712 // decision
+  xyz 387 94 2000
+end
+activityactioncanvas 128952 activityaction_ref 134584 // activity action Calculate MD5
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 353 154 2005 101 61
+end
+flowcanvas 128312 flow_ref 128056 // <flow>
+  
+  from ref 128056 z 2001 to ref 128184
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 128696 flow_ref 134584 // <flow>
+  
+  from ref 128184 z 2001 to ref 128568
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129080 flow_ref 134712 // <flow>
+  
+  from ref 128568 z 2001 to ref 128824
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129208 flow_ref 134840 // <flow>
+  
+  from ref 128824 z 2006 to ref 128952
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+end

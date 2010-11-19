@@ -1,0 +1,77 @@
+format 70
+
+activitynodecanvas 128056 activitynode_ref 141368 // initial
+  xyz 101 16 2000
+end
+activityactioncanvas 128184 activityaction_ref 134584 // activity action Calculate MD5
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 60 65 2000 101 61
+end
+activityactioncanvas 128440 activityaction_ref 141112 // activity action Compare MD5 with MD5 list
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 38 161 2000 145 77
+end
+activitynodecanvas 128696 activitynode_ref 141496 // decision
+  xyz 98 260 2000
+end
+activityactioncanvas 129080 activityaction_ref 141240 // activity action Add file to dupplicates list
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 196 311 2000 149 61
+end
+activitynodecanvas 129336 activitynode_ref 141624 // merge
+  xyz 97 321 2000
+end
+activityactioncanvas 129848 activityaction_ref 141368 // activity action Add file to MD5 list
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 64 384 2006 100 60
+end
+activitynodecanvas 130488 activitynode_ref 141752 // activity_final
+  xyz 100 470 2000
+end
+flowcanvas 128312 flow_ref 141368 // <flow>
+  
+  from ref 128056 z 2001 to ref 128184
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 128568 flow_ref 141496 // <flow>
+  
+  from ref 128184 z 2001 to ref 128440
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 128824 flow_ref 141624 // <flow>
+  
+  from ref 128440 z 2001 to ref 128696
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129208 flow_ref 141752 // [MD5 already on list]
+  
+  from ref 128696 z 2001 label "[MD5 already on list]" xyz 126 253 2001 to point 267 276
+  line 130360 z 2001 to ref 129080
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129464 flow_ref 141880 // <flow>
+  decenter_end 540
+  
+  from ref 129080 z 2001 to ref 129336
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129592 flow_ref 142008 // <flow>
+  
+  from ref 128696 z 2001 to ref 129336
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130104 flow_ref 142136 // <flow>
+  
+  from ref 129336 z 2007 to ref 129848
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130616 flow_ref 142264 // <flow>
+  
+  from ref 129848 z 2007 to ref 130488
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+end

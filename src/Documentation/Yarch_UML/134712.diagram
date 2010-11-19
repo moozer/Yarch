@@ -1,0 +1,92 @@
+format 70
+
+activitynodecanvas 128056 activitynode_ref 141880 // initial
+  xyz 80 25 2000
+end
+activityactioncanvas 128184 activityaction_ref 141496 // activity action Get directory entries
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 24 71 2000 130 68
+end
+activitynodecanvas 128440 activitynode_ref 142008 // merge
+  xyz 77 166 2000
+end
+activitynodecanvas 128568 activitynode_ref 142136 // decision
+  xyz 77 257 2000
+end
+activityactioncanvas 128952 activityaction_ref 141624 // activity action Process file
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 157 156 2000 100 60
+end
+activitynodecanvas 129464 activitynode_ref 142264 // merge
+  xyz 77 324 2000
+end
+activitynodecanvas 129592 activitynode_ref 142392 // decision
+  xyz 77 418 2000
+end
+activityactioncanvas 129976 activityaction_ref 141752 // activity action Process directory
+  show_infonote default drawing_language default show_stereotype_properties default
+  show_opaque_action_definition default
+  xyzwh 160 313 0 100 60
+end
+activitynodecanvas 130744 activitynode_ref 142520 // activity_final
+  xyz 77 485 2000
+end
+note 131128 "Recursive call"
+  color gray  xyzwh 286 314 2000 95 63
+flowcanvas 128312 flow_ref 142392 // <flow>
+  
+  from ref 128056 z 2001 to ref 128184
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 128696 flow_ref 142520 // <flow>
+  
+  from ref 128184 z 2001 to ref 128440
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 128824 flow_ref 142648 // <flow>
+  
+  from ref 128440 z 2001 to ref 128568
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129080 flow_ref 142776 // <flow>
+  
+  from ref 128952 z 2001 to ref 128440
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129208 flow_ref 142904 // [Unprocessed files]
+  
+  from ref 128568 z 2001 label "[Unprocessed files]" xyz 116 275 2001 to point 203 273
+  line 129336 z 2001 to ref 128952
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129720 flow_ref 143032 // <flow>
+  
+  from ref 128568 z 2001 to ref 129464
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 129848 flow_ref 143160 // <flow>
+  
+  from ref 129464 z 2001 to ref 129592
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130104 flow_ref 143288 // [Unprocessed directories]
+  
+  from ref 129592 z 2001 label "[Unprocessed directories]" xyz 129 438 2001 to point 207 434
+  line 130360 z 2001 to ref 129976
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130232 flow_ref 143416 // <flow>
+  
+  from ref 129976 z 2001 to ref 129464
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+flowcanvas 130872 flow_ref 143544 // <flow>
+  
+  from ref 129592 z 2001 to ref 130744
+  show_infonote default drawing_language default show_stereotype_properties default write_horizontally default
+end
+line 131256 -_-_
+  from ref 129976 z 2001 to ref 131128
+end

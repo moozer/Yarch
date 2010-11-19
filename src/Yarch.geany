@@ -1,0 +1,27 @@
+
+[indentation]
+indent_width=4
+indent_type=0
+indent_hard_tab_width=8
+detect_indent=false
+indent_mode=2
+
+[project]
+name=Yarch
+base_path=/home/morten/projects/Yarch/
+make_in_base_path=false
+description=
+run_cmd=python RunTests.py
+
+[files]
+current_page=3
+FILE_NAME_0=2610;Python;0;16;0;1;0;/home/morten/projects/Yarch/Yarch/ProcessDir/ProcessDir.py;0
+FILE_NAME_1=4720;Python;0;16;0;1;0;/home/morten/projects/Yarch/tests/testProcessDirWithCache.py;0
+FILE_NAME_2=2924;Python;0;16;0;1;0;/home/morten/projects/Yarch/tests/testData.py;0
+FILE_NAME_3=4335;Python;0;16;0;1;0;/home/morten/projects/Yarch/Yarch/FindDupplicates.py;0
+FILE_NAME_4=2675;Python;0;16;0;1;0;/home/morten/projects/Yarch/tests/testProcessDirUtils.py;0
+FILE_NAME_5=2410;Python;0;16;0;1;0;/home/morten/projects/Yarch/tests/testProcessDir.py;0
+FILE_NAME_6=1306;Python;0;16;0;1;0;/home/morten/projects/Yarch/RunTests.py;0
+FILE_NAME_7=6717;Python;0;16;0;1;0;/home/morten/projects/Yarch/tests/testFileCache.py;0
+FILE_NAME_8=5285;Python;0;16;0;1;0;/home/morten/projects/Yarch/Yarch/ProcessDir/FileCache.py;0
+FILE_NAME_9=1299;Python;0;16;0;1;0;/home/morten/projects/Yarch/Yarch/ProcessFile/ProcessFile.py;0
