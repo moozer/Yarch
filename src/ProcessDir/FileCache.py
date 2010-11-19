@@ -29,7 +29,7 @@ class FileCache:
         self._FileCache = []
         self._Directory = Directory
         if not os.path.isdir( Directory ):
-            raise IOError( "Directory specified is not a directory: " + Directory )
+            raise IOError( "Directory specified is not a directory: %s"% Directory )
         
         self._CacheFilename = CacheFilename
     
