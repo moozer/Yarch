@@ -19,11 +19,10 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
-import os
 import os.path
 from DirlistError import DirlistError
 import datetime
-from checksum import create_checksum
+from ProcessFile.ProcessFile import create_checksum
 import base64
 
 class Dirlist:
@@ -36,7 +35,7 @@ class Dirlist:
     def __init__(self, Basedir = '.', DirlistFilename = '.dirlist.md5' ):
         ''' Class constructor '''
         if not os.path.isdir( Basedir ):
-            raise DirlistError( "Directory does not exist" )
+            raise DirlistError( "Directory does not exist: %s"%Basedir )
             
         self._Basedir = Basedir
         self._Seperator = '\t'
