@@ -25,17 +25,17 @@ from ProcessDir.FileCache import FileCache
 import os
 
 # test data
-TestDirA = './tests/data_tmp/ProcessDir/TestDirA/'
+TestDirA = './data_tmp/ProcessDir/TestDirA/'
 TestDirA_FileA = TestDirA + 'FileA.txt'
 TestDirA_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestDirA_FileA_Entry = { 'filename': TestDirA_FileA, 'md5': TestDirA_FileA_md5 }
 
 # restore test data
-TestRestoreDir = './tests/data_tmp/FileCache/RestoreDirlist/'
+TestRestoreDir = './data_tmp/FileCache/RestoreDirlist/'
 TestRestoreDir_Entries = [{'md5': 'b9fe47a96c549d293adaff557ab64328', 'filename': 'asgeroth-080422.tgz'}]
 
 # test save dirlist
-TestSaveDir = './tests/data_tmp/FileCache/SaveDirlist/'
+TestSaveDir = './data_tmp/FileCache/SaveDirlist/'
 TestSaveDir_FileA = 'FileA.txt'
 TestSaveDir_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestSaveDir_FileB = 'FileB.txt'
@@ -51,7 +51,7 @@ TestSaveDir_list_complete = [{  'md5': TestSaveDir_FileA_md5, 'filename': TestSa
 MalformedEntry = { 'md5': 'sdfsdf', 'xxx': 'dvsdv' }
 
 # Bad Dirlist
-TestBadDirlistDir = './tests/data_tmp/FileCache/' + 'MalformedDirlistfile/'
+TestBadDirlistDir = './data_tmp/FileCache/' + 'MalformedDirlistfile/'
 
 # add test
 AddObjectsList = [{  'md5': 'SomeMd5Sum', 'filename': 'SomeFileName', 'duplicates': [], 'directory': '.' } ]
@@ -59,19 +59,28 @@ AddObjectsList = [{  'md5': 'SomeMd5Sum', 'filename': 'SomeFileName', 'duplicate
 # tests
 class testFileCache(unittest.TestCase):     
     def setUp( self ):
-        # Running a script to init data.        
-        os.system( 'sh ./tests/ProcessDirDataInit.sh' )
+        # Running a script to init data.      
+        self._CurrentDir = os.getcwd()
+        try:
+            os.chdir('tests')
+        except OSError:
+            pass
+        cmd = 'sh ./ProcessDirDataInit.sh'
+        res = os.system( cmd )
+        if res:
+            raise IOError( 'Failed to run setUp command: %s' % cmd)
         
     def tearDown( self):
         # run script to undo stuff in setUp
-        os.system( 'sh ./tests/ProcessDirDataCleanup.sh' )
+        os.system( 'sh ./ProcessDirDataCleanup.sh' )
+        os.chdir( self._CurrentDir )
         
     def testInstatiation( self ):
         """ Simple instantiation """
-        FC = FileCache()
+        FileCache()
 
-    def testInstatiation( self ):
-        """ Simple instantiation """
+    def testGetAllEntries( self ):
+        """ Checking entries against known result """
         FC = FileCache( Data = TestSaveDir_entries )
         self.assertEqual( FC.getAllEntries(), TestSaveDir_entries )
                 
