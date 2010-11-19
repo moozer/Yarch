@@ -21,7 +21,7 @@
 
 # imports
 from optparse import OptionParser
-from ProcessDir.ProcessDir import ProcessDir, DumpFilelist, DeleteByList, FileCache
+from ProcessDir.ProcessDir import ProcessDir, DeleteByList, FileCache
 import sys, os
 
 def ParseCmdLineOptions():
@@ -41,7 +41,7 @@ def ParseCmdLineOptions():
     parser.add_option( "-l", action="store_true", dest="AllowLinks", default=False )                 
     parser.add_option( "--delete-duplicates", action="store_true", dest="deletedups", default=False )
  
-    (options, args) =  parser.parse_args()
+    (options, args) =  parser.parse_args() #@UnusedVariable
     
     if options.SecondaryDir == "":
         options.SecondaryDir = options.MasterDir
@@ -86,11 +86,13 @@ def OutputToStderr( SomeString ):
 def main():
     opt = ParseCmdLineOptions()
 
+    # Function to call at each iteration
     if not opt.verbose:
         PF = None
     else:
         PF = ProgressIndicator
-    
+
+    # Read or process the master directory
     if opt.MasterList:
         print "Retrieving information from file:", opt.MasterList
         MasterCache = FileCache()
@@ -100,21 +102,25 @@ def main():
         MasterCache = ProcessDir( opt.MasterDir ).Process( ProgressFunction = PF, UseCache = opt.useCache, 
                     LinksAreFatal = not opt.AllowLinks )
 
+    # save dirlist file?
     if opt.DumpFile:
         print "Saving masterlist to file:", opt.DumpFile
         MasterCache.saveCache( Filename = opt.DumpFile, UseFullPath = True )
-    
+
+    # After master dir is don, process second dir and compare.    
     print "Processing secondary directory"
     SecCache = ProcessDir( opt.SecondaryDir).Process( CompareList=MasterCache, ProgressFunction = PF, 
                     UseCache = opt.useCache, 
                     LinksAreFatal = not opt.AllowLinks )
     
+    # and output
     print "Dumping duplicates list (if any)"
     if opt.MasterDir == opt.SecondaryDir:
         ShowDuplicatesSelfCompare( SecCache )
     else:
         ShowDuplicates( SecCache, MasterCache )
 
+    # optionally delete duplicates
     if opt.deletedups:
         if opt.MasterDir == opt.SecondaryDir:
             print "Duplicates will only be erased from secondary (and Sec. and master are the same)"
