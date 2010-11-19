@@ -46,7 +46,7 @@ class ProcessDir:
         @param BaseDir The directory to process
         """
         if not os.path.isdir( BaseDir ):
-            raise IOError( "Directory " + BaseDir + " does not exist" )
+            raise IOError( "Directory does not exist: %s"%BaseDir )
         self._BaseDir = BaseDir
         self._ProcessFile = ProcessFile
         self._CacheFilename = '.md5dirlist'

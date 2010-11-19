@@ -21,10 +21,10 @@
 
 # imports
 import unittest
-from ProcessDir.ProcessDir import ProcessDir, DumpFilelist, FileCache
+from ProcessDir.ProcessDir import ProcessDir, FileCache
 import os
 
-TestcaseBaseDir = './tests/data_tmp/ProcessDirWithCache/'
+TestcaseBaseDir = './data_tmp/ProcessDirWithCache/'
 
 # testdirA is simple: two files, no subdirs
 TestDirA = TestcaseBaseDir + 'BadMd5Sum/'
@@ -60,12 +60,21 @@ def SaveOutputToList( Entry ):
 # tests
 class testProcessDirWithCache(unittest.TestCase):     
     def setUp( self ):
-        # Running a script to init data.        
-        os.system( 'sh ./tests/ProcessDirDataInit.sh' )
+        # Running a script to init data.      
+        self._CurrentDir = os.getcwd()
+        try:
+            os.chdir('tests')
+        except OSError:
+            pass
+        cmd = 'sh ./ProcessDirDataInit.sh'
+        res = os.system( cmd )
+        if res:
+            raise IOError( 'Failed to run setUp command: %s' % cmd)
         
     def tearDown( self):
         # run script to undo stuff in setUp
-        os.system( 'sh ./tests/ProcessDirDataCleanup.sh' )
+        os.system( 'sh ./ProcessDirDataCleanup.sh' )
+        os.chdir( self._CurrentDir )
         
     def testWithoutCache( self ):
         """ Check that processDir accept the UseCache parameter """
@@ -115,7 +124,9 @@ class testProcessDirWithCache(unittest.TestCase):
  
     def testDirWithLink( self ):
         """ Check that processDir ignores links"""
-        self.assertEqual( ProcessDir( TestDirD ).Process(), FileCache( Data = TestDirD_list ))
+        FC = FileCache( Data = TestDirD_list )
+        PD = ProcessDir( TestDirD ).Process()
+        self.assertEqual( PD, FC )
 
     def testDirWithLink_Fatal( self ):
         """ Check that processDir fails om links"""
