@@ -18,7 +18,7 @@ def createImage(i,q,dest = "/tmp"):
         cmd = "dd if=/dev/zero of=%s/10mbfile.%s bs=1024 count=%s" % (dest,i,size)
         status = call(cmd, shell=True)
         if status != 0:
-            print "Trouble creating image files", err
+            print "Trouble creating image files"
             sys.exit(1)
         q.task_done()
 
@@ -35,6 +35,7 @@ def controller():
     print "Main Thread Waiting"
     queue.join()
     print "Done"
+    
 if __name__ == "__main__":
     controller()
 
