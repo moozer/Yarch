@@ -30,7 +30,7 @@ import os
 DirNonExist = "./ThisDirectoryDoesNotExist"
 
 # No md5 file data
-Data1Dir = "./tests/DirWithoutDirlist"
+Data1Dir = "./DirWithoutDirlist"
 Data1Result =  [{'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 'file': 'file3.txt', 'size': 9L}, {'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 'file': 'file2.txt', 'size': 9L}, {'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 'file': 'file1.txt', 'size': 9L}]
 Data1Output = '''file3.txt	9	2010-05-15 21:31:50	CHhAM5C35fAqfX/A68hZOQ==
 file2.txt	9	2010-05-15 21:31:50	CHhAM5C35fAqfX/A68hZOQ==
@@ -38,7 +38,7 @@ file1.txt	9	2010-05-15 21:31:50	CHhAM5C35fAqfX/A68hZOQ==
 '''
 
 # No md5 file data
-Data2Dir = "./tests/DirWithDirlist"
+Data2Dir = "./DirWithDirlist"
 Data2Result = [
     {'mtime': datetime.datetime(2010, 5, 14, 15, 42, 57), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 
         'file': 'file3.txt', 'size': 9L}, 
@@ -48,7 +48,7 @@ Data2Result = [
         'file': 'file1.txt', 'size': 9L}]
 
 # directory without file but with a bad link.
-Data3Dir = "./tests/DirWithBadLink"
+Data3Dir = "./DirWithBadLink"
 Data3Result =  [
     {'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 
         'file': 'file3.txt', 'size': 9L}, 
