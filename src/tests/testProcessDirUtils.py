@@ -25,7 +25,7 @@ from ProcessDir.ProcessDir import DeleteByList, ProcessDir, FileCache
 import os
 
 # duplicate data list
-DeleteListDir = './tests/data_tmp/ProcessDirUtils/DeleteListDir/'
+DeleteListDir = './data_tmp/ProcessDirUtils/DeleteListDir/'
 DeleteListDir_FileA = 'FileA.txt'
 DeleteListDir_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 DeleteListDir_FileB = 'FileB.txt'
@@ -43,12 +43,21 @@ def SaveOutputToList( Entry ):
 # tests
 class testProcessDirUtils(unittest.TestCase):     
     def setUp( self ):
-        # Running a script to init data.        
-        os.system( 'sh ./tests/ProcessDirDataInit.sh' )
+        # Running a script to init data.      
+        self._CurrentDir = os.getcwd()
+        try:
+            os.chdir('tests')
+        except OSError:
+            pass
+        cmd = 'sh ./ProcessDirDataInit.sh'
+        res = os.system( cmd )
+        if res:
+            raise IOError( 'Failed to run setUp command: %s' % cmd)
         
     def tearDown( self):
         # run script to undo stuff in setUp
-        os.system( 'sh ./tests/ProcessDirDataCleanup.sh' )
+        os.system( 'sh ./ProcessDirDataCleanup.sh' )
+        os.chdir( self._CurrentDir )
         #~ 
     def testDelete( self ):
         """ Check that processDir accept the UseCache parameter """
