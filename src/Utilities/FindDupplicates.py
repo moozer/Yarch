@@ -29,17 +29,23 @@ def ParseCmdLineOptions():
     parser = OptionParser()
     parser.add_option("-M", "--master", dest="MasterDir", default=".",
                       help="Primary directory", metavar="MASTERDIR")
-    parser.add_option("-m", "--master-list", dest="MasterList", help="Read from file instead of doing the work" )
-    parser.add_option("-D", "--dump-to-file", dest="DumpFile", help="Save entire list to disk" )    
+    parser.add_option("-m", "--master-list", dest="MasterList", 
+                      help="Read from file instead of doing the work" )
+    parser.add_option("-D", "--dump-to-file", dest="DumpFile", 
+                      help="Save entire list to disk" )    
                       
     parser.add_option("-S", "--secondary", dest="SecondaryDir", default="",
                       help="Secondary directory", metavar="SECONDARYDIR")
-    parser.add_option( "-q", action="store_false", dest="verbose", default=True )                 
-    parser.add_option( "-v", action="store_true", dest="verbose" )                 
+    parser.add_option( "-q", action="store_false", dest="verbose", default=True,
+                      help="quiet mode (opposite of verbose)" )              
+    parser.add_option( "-v", action="store_true", dest="verbose",
+                      help="verbose mode (opposite of quiet)" )                 
     parser.add_option( "-c", action="store_true", dest="useCache", default=False,
-                        help="Use cache (writes .md5listdir to all directories)" )
-    parser.add_option( "-l", action="store_true", dest="AllowLinks", default=False )                 
-    parser.add_option( "--delete-duplicates", action="store_true", dest="deletedups", default=False )
+                      help="Use cache (writes .md5listdir to all directories)" )
+    parser.add_option( "-l", action="store_true", dest="AllowLinks", default=False,
+                      help="If enabled, links are allowed, otherwise an error is issued."  )                 
+    parser.add_option( "--delete-duplicates", action="store_true", dest="deletedups", default=False,
+                       help="Deletes all duplicated from secondary dir. Use with caution." )
  
     (options, args) =  parser.parse_args() #@UnusedVariable
     
