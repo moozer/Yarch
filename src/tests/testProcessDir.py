@@ -21,7 +21,7 @@
 
 # imports
 import unittest
-from ProcessDir.ProcessDir import ProcessDir, DumpFilelist,FileCache
+from ProcessDir.ProcessDir import ProcessDir, FileCache
 import os
 
 from testData import *
@@ -35,12 +35,21 @@ def SaveVerboseToList( Entry ):
 # tests
 class testProcessDir(unittest.TestCase):     
     def setUp( self ):
-        #w Running a script to init data.        
-        os.system( 'sh ./tests/ProcessDirDataInit.sh' )
+        # Running a script to init data.      
+        self._CurrentDir = os.getcwd()
+        try:
+            os.chdir('tests')
+        except OSError:
+            pass
+        cmd = 'sh ./ProcessDirDataInit.sh'
+        res = os.system( cmd )
+        if res:
+            raise IOError( 'Failed to run setUp command: %s' % cmd)
         
     def tearDown( self):
         # run script to undo stuff in setUp
-        os.system( 'sh ./tests/ProcessDirDataCleanup.sh' )
+        os.system( 'sh ./ProcessDirDataCleanup.sh' )
+        os.chdir( self._CurrentDir )
         
     def testExistingDir( self ):
         """ Simple instantiation with existing directory"""

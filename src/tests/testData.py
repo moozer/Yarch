@@ -24,7 +24,7 @@
 NonexistentDir = './ThisDirectoryDoesNotExist'
 
 # testdirA is simple: two files, no subdirs
-TestDirA = './tests/data_tmp/ProcessDir/TestDirA/'
+TestDirA = './data_tmp/ProcessDir/TestDirA/'
 TestDirA_FileA = 'FileA.txt'
 TestDirA_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestDirA_FileB = 'FileB.txt'
@@ -33,7 +33,7 @@ TestDirA_list = [   { 'md5': TestDirA_FileA_md5, 'filename': TestDirA_FileA, 'du
                     { 'md5': TestDirA_FileB_md5, 'filename': TestDirA_FileB, 'duplicates': [], 'directory': TestDirA }]
 
 # testdirB has two file, and a subdor with two files.
-TestDirB = './tests/data_tmp/ProcessDir/TestDirB/'
+TestDirB = './data_tmp/ProcessDir/TestDirB/'
 TestDirB_FileA = 'FileA.txt'
 TestDirB_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestDirB_FileB = 'FileB.txt'
