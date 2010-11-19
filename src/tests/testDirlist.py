@@ -31,10 +31,16 @@ DirNonExist = "./ThisDirectoryDoesNotExist"
 
 # No md5 file data
 Data1Dir = "./DirWithoutDirlist"
-Data1Result =  [{'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 'file': 'file3.txt', 'size': 9L}, {'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 'file': 'file2.txt', 'size': 9L}, {'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 'file': 'file1.txt', 'size': 9L}]
-Data1Output = '''file3.txt	9	2010-05-15 21:31:50	CHhAM5C35fAqfX/A68hZOQ==
-file2.txt	9	2010-05-15 21:31:50	CHhAM5C35fAqfX/A68hZOQ==
-file1.txt	9	2010-05-15 21:31:50	CHhAM5C35fAqfX/A68hZOQ==
+Data1Result =  [
+    {'mtime': datetime.datetime(2010, 5, 14, 21, 43, 17), 'md5': '0878403390b7e5f02a7d7fc0ebc85939', 
+        'file': 'file1.txt', 'size': 9L}, 
+    {'mtime': datetime.datetime(2010, 5, 14, 21, 43, 17), 'md5': '0878403390b7e5f02a7d7fc0ebc85939', 
+        'file': 'file3.txt', 'size': 9L}, 
+    {'mtime': datetime.datetime(2010, 5, 14, 21, 43, 17), 'md5': '0878403390b7e5f02a7d7fc0ebc85939', 
+        'file': 'file2.txt', 'size': 9L}]
+Data1Output = '''file1.txt\t9\t2010-05-14 21:43:17\tMDg3ODQwMzM5MGI3ZTVmMDJhN2Q3ZmMwZWJjODU5Mzk=
+file3.txt\t9\t2010-05-14 21:43:17\tMDg3ODQwMzM5MGI3ZTVmMDJhN2Q3ZmMwZWJjODU5Mzk=
+file2.txt\t9\t2010-05-14 21:43:17\tMDg3ODQwMzM5MGI3ZTVmMDJhN2Q3ZmMwZWJjODU5Mzk=
 '''
 
 # No md5 file data
@@ -50,13 +56,12 @@ Data2Result = [
 # directory without file but with a bad link.
 Data3Dir = "./DirWithBadLink"
 Data3Result =  [
-    {'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 
+    {'mtime': datetime.datetime(2010, 5, 15, 21, 37, 57), 'md5': '0878403390b7e5f02a7d7fc0ebc85939', 
+        'file': 'file1.txt', 'size': 9L}, 
+    {'mtime': datetime.datetime(2010, 5, 15, 21, 37, 57), 'md5': '0878403390b7e5f02a7d7fc0ebc85939', 
         'file': 'file3.txt', 'size': 9L}, 
-    {'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 
-        'file': 'file2.txt', 'size': 9L}, 
-    {'mtime': datetime.datetime(2010, 5, 15, 21, 31, 50), 'md5': '\x08x@3\x90\xb7\xe5\xf0*}\x7f\xc0\xeb\xc8Y9', 
-        'file': 'file1.txt', 'size': 9L}]
-
+    {'mtime': datetime.datetime(2010, 5, 15, 21, 37, 57), 'md5': '0878403390b7e5f02a7d7fc0ebc85939', 
+        'file': 'file2.txt', 'size': 9L}]
 
 class testmd5Dirlist(unittest.TestCase):                           
     def testInstantiate( self ):
@@ -72,18 +77,14 @@ class testmd5Dirlist(unittest.TestCase):
         ''' create the dirlistfile '''
         dl = Dirlist( Data1Dir )
         res = dl.createDirlist()
-        #~ print res
-        #~ print Data1Result
-
-        self.assertEqual( res, Data1Result, "Processed data does not match expectations" )
+        #self.assertEqual( res, Data1Result, "Processed data does not match expectations" )
+        self.assertEqual( res, Data1Result )
 
     def testDirlistOutput( self ):
         ''' Testing file content output function '''
         dl = Dirlist( Data1Dir )
         DirlistData = dl.createDirlist()
         output = dl.generateOutput( DirlistData )
-        #~ print output
-        #~ print Data1Output
         self.assertEqual( output, Data1Output, "Output does not match expectations" )
 
     def testGetDirlistFromOutput( self ):
@@ -106,7 +107,8 @@ class testmd5Dirlist(unittest.TestCase):
     def testGetDirlistFromFile( self ):
         ''' test reads the dirlist from file '''
         dl = Dirlist( Data2Dir )
-        self.assertEqual( dl.readDirlistFromFile(), Data2Result, "Bad data read from dirlist file" )
+        self.assertEqual( dl.readDirlistFromFile(), Data2Result )
+        #self.assertEqual( dl.readDirlistFromFile(), Data2Result, "Bad data read from dirlist file" )
         
     def testWriteDirlistToFile( self ):
         ''' test writes the dirlist to file '''
@@ -146,6 +148,6 @@ class testmd5Dirlist(unittest.TestCase):
         res = dl.getDirlist()
         #~ print res
         #~ print Data3Result
-        self.assertEqual( res, Data3Result, "Bad data read from dirlist file" )
+        self.assertEqual( res, Data3Result )
         os.remove( os.path.join( Data3Dir, '.dirlist.md5' ) )
    
