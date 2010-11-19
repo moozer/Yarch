@@ -8,7 +8,7 @@ class diskwalk(object):
     def enumeratePaths(self):
         """Returns the path to all the files in a directory as a list"""
         path_collection = []
-        for dirpath, dirnames, filenames in os.walk(self.path):
+        for dirpath, dirnames, filenames in os.walk(self.path): #@UnusedVariable
             for file in filenames:
                 fullpath = os.path.join(dirpath, file)
                 path_collection.append(fullpath)
@@ -18,7 +18,7 @@ class diskwalk(object):
     def enumerateFiles(self):
         """Returns all the files in a directory as a list"""
         file_collection = []
-        for dirpath, dirnames, filenames in os.walk(self.path):
+        for dirpath, dirnames, filenames in os.walk(self.path): #@UnusedVariable
             for file in filenames:
                 file_collection.append(file)
 
@@ -27,7 +27,7 @@ class diskwalk(object):
     def enumerateDir(self):
         """Returns all the directories in a directory as a list"""
         dir_collection = []
-        for dirpath, dirnames, filenames in os.walk(self.path):
+        for dirpath, dirnames, filenames in os.walk(self.path): #@UnusedVariable
             for dir in dirnames:
                 dir_collection.append(os.path.join(dirpath, dir))
 
@@ -36,7 +36,7 @@ class diskwalk(object):
     def enumerateFilesByExt(self, Extension ):
         """Returns all the files in a directory """
         file_collection = []
-        for dirpath, dirnames, filenames in os.walk(self.path):
+        for dirpath, dirnames, filenames in os.walk(self.path): #@UnusedVariable
             for file in filenames:
                 (unused, sep, ext) = file.rpartition('.')
                 if sep == '.' and ext == Extension:

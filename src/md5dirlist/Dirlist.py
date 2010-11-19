@@ -78,7 +78,7 @@ class Dirlist:
                 size = filestat.st_size
                 md5 = create_checksum(fullpath)
                 file_collection.append( {'file': filename, 'size': size, 'mtime': mtime, 'md5': md5} )
-            except OSError, e:
+            except OSError:
                 # file level exception are ignored.
                 print "Bad stuff in", filename
                 pass

@@ -24,7 +24,7 @@ import unittest
 from ProcessDir.ProcessDir import ProcessDir, FileCache
 import os
 
-from testData import *
+from testData import * #@UnusedWildImport
 
 # progress indicator test function
 SavedList = []

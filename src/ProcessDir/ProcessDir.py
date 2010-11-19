@@ -20,7 +20,6 @@
 #       MA 02110-1301, USA.
 
 import os
-import csv # used by the cache
 from ProcessFile.ProcessFile import ProcessFile
 from FileCache import FileCache
 
@@ -72,7 +71,7 @@ class ProcessDir:
 
     def _ProcessDir( self, DirToProcess ):
         """ internal function to do the actual processing """
-         # process all entries (files and dirs, dirs are put in a seperate list
+        # process all entries (files and dirs, dirs are put in a seperate list
   
         Subdirlist = [] # list of subdirs, to be processed
         Cache = FileCache( DirToProcess )
