@@ -25,6 +25,10 @@ from FileCache import FileCache
 
 
 def DumpFilelist( SomeText, Filelist ):
+    ''' Utility function for nice output
+    @param SomeText: The text to output before the list
+    @param Filelist: The list with filenames, md5sum and, optionaly, the duplikates
+    '''  
     print SomeText
     for i in range( len( Filelist ) ):
         if 'duplicates' in Filelist[i]:
@@ -56,10 +60,10 @@ class ProcessDir:
         """ Processes the directory supplied in the constructor 
             recursively and returns the information extracted 
             a list of dictionaries with 'md5', 'filename' and 'duplicate' 
-            (a list refereing to the indices of CompareList)
+            (a list refering to the indices of CompareList)
             ProgressFunction is an optinal function to enableshowing progress. 
             It takes the current ('md5', 'filelist', 'duplicates') dictionary as parameter
-        @param UseCache If true, any cache is true if found, otherwise ignored
+        @param UseCache: If true, any cache is true if found, otherwise ignored
         """
 
         self._CompareList = CompareList.getAllEntries()
@@ -68,6 +72,17 @@ class ProcessDir:
         self._LinksAreFatal = LinksAreFatal
 
         return self._ProcessDir( self._BaseDir )
+
+
+    def _ProcessDuplicate(self, FileData):
+        ''' Checks the current file against the previous ones for duplicates (based on md5)'''
+        Duplicates = []
+        for i in range(len(self._CompareList)):
+            if self._CompareList[i]['md5'] == FileData['md5']:
+                Duplicates.append(i)
+        
+        return Duplicates
+
 
     def _ProcessDir( self, DirToProcess ):
         """ internal function to do the actual processing """
@@ -92,11 +107,11 @@ class ProcessDir:
             
             if os.path.islink( FullFilename ):
                 if self._LinksAreFatal:
-                    raise IOError( "File not directory or file: " + FullFilename)
+                    raise IOError( "File is a link: " + FullFilename)
                 else:
                     continue # skip
                 
-            # if entry is a directrory
+            # if entry is a directory
             if os.path.isdir( FullFilename ):
                 Subdirlist.append( FullFilename )
                 continue
@@ -107,15 +122,11 @@ class ProcessDir:
                 FileData = self._ProcessFile( FullFilename )
  
             # check for duplicates
-            Duplicates = []
-            for i in range( len(self._CompareList) ):
-                if self._CompareList[i]['md5'] == FileData['md5']:
-                    Duplicates.append( i )
-            
-            ResDict = {  'md5': FileData['md5'], 
-                         'filename': filename,
-                         'duplicates': Duplicates,
-                         'directory': DirToProcess }
+            ResDict = {'md5':FileData['md5'], 
+                       'filename':filename, 
+                       'duplicates': self._ProcessDuplicate(FileData), 
+                       'directory':DirToProcess}
+
             Cache.addEntry( ResDict )
      
             # output/update/whatever for each file
