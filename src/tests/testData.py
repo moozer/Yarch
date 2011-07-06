@@ -19,6 +19,7 @@
 #       Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 #       MA 02110-1301, USA.
 
+import os
 
 # test data used by ProcessDir
 NonexistentDir = './ThisDirectoryDoesNotExist'
@@ -38,7 +39,8 @@ TestDirB_FileA = 'FileA.txt'
 TestDirB_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestDirB_FileB = 'FileB.txt'
 TestDirB_FileB_md5 = '9b36b2e89df94bc458d629499d38cf86'
-TestDirB_subA = TestDirB + 'SubdirA'
+SubDirA = 'SubdirA'
+TestDirB_subA = TestDirB + SubDirA
 TestDirB_SubdirA_FileA = 'FileA.txt'
 TestDirB_SubdirA_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestDirB_SubdirA_FileB = 'FileB.txt'
@@ -59,3 +61,11 @@ TestDirB_selfdup_list = [
                     { 'md5': TestDirB_SubdirA_FileA_md5, 'filename': TestDirB_SubdirA_FileA, 'duplicates': [0, 2] },
                     { 'md5': TestDirB_FileB_md5, 'filename': TestDirB_FileB, 'duplicates': [1, 3] },
                     { 'md5': TestDirB_SubdirA_FileB_md5, 'filename': TestDirB_SubdirA_FileB, 'duplicates': [1, 3] }]
+
+TestDirEmptyTopLevel = './data_tmp/ProcessDir/TestDirEmptyTopLevel/'
+TestDirEmptyTopLevel_list = [   
+                    { 'md5': TestDirB_FileA_md5, 'filename': TestDirB_FileA, 'duplicates': [], 'directory': TestDirEmptyTopLevel },
+                    { 'md5': TestDirB_FileB_md5, 'filename': TestDirB_FileB, 'duplicates': [], 'directory': TestDirEmptyTopLevel },
+                    { 'md5': TestDirB_SubdirA_FileA_md5, 'filename': TestDirB_SubdirA_FileA, 'duplicates': [], 'directory': TestDirEmptyTopLevel+SubDirA },
+                    { 'md5': TestDirB_SubdirA_FileB_md5, 'filename': TestDirB_SubdirA_FileB, 'duplicates': [], 'directory': TestDirEmptyTopLevel+SubDirA }]
+

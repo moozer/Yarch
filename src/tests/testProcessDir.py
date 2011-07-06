@@ -79,3 +79,14 @@ class testProcessDir(unittest.TestCase):
         PD = ProcessDir( TestDirA )
         Res = PD.Process( ProgressFunction = SaveVerboseToList )
         self.assertEqual( Res.getAllEntries(), SavedList )
+        
+    def testRecursiveEmptyTopLevel( self ):
+        """ Check return value of multilevel dir tree with empty toplevel dir"""
+        PD = ProcessDir( TestDirEmptyTopLevel )
+        Res = PD.Process()
+        ExpRes = FileCache( Data = TestDirEmptyTopLevel_list )
+
+        self.assertEqual( Res.getNumberOfEntries(), ExpRes.getNumberOfEntries() )        
+        self.assertEqual( Res.getAllEntries(), ExpRes.getAllEntries() )
+
+        
