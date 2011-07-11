@@ -46,7 +46,6 @@ TestSaveDir_list_complete = [{  'md5': TestSaveDir_FileA_md5, 'filename': TestSa
                              {  'md5': TestSaveDir_FileB_md5, 'filename': TestSaveDir_FileB, 
                                 'duplicates': [], 'directory': TestSaveDir }]
 
-
 # addEntry
 MalformedEntry = { 'md5': 'sdfsdf', 'xxx': 'dvsdv' }
 
@@ -174,4 +173,14 @@ class testFileCache(unittest.TestCase):
         FC.addEntry( Entry )
         self.assertEqual( FC.getNumberOfEntries(), 1 ) # not 2
         self.assertEqual( FC.getEntry( Entry['filename'] ), Entry ) 
+        
+    def testGetDirectoryDefault(self):
+        """ directory getter (default directory) """
+        FC = FileCache()
+        self.assertEqual( '.', FC.GetDirectory() )        
+        
+    def testGetDirectoryNonDefault(self):
+        """ directory getter """
+        FC = FileCache( TestRestoreDir )
+        self.assertEqual( TestRestoreDir, FC.GetDirectory() )
         

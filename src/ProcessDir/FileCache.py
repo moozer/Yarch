@@ -173,3 +173,6 @@ class FileCache:
             if not 'duplicates' in keys:
                 self._FileCache[i]['directory'] = self._Directory
  
+    def GetDirectory(self):
+        """ returns the current directory """
+        return self._Directory
