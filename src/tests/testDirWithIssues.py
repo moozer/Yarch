@@ -6,6 +6,7 @@ Created on Nov 20, 2010
 import unittest
 from ProcessDir.ProcessDir import ProcessDir, FileCache
 import os
+from DirUtils import *
 
 TestDirWI = "data_tmp/DirWithIssues"
 TestDirWIWithCache = "data_tmp/DirWithIssuesWithMd5"
@@ -18,22 +19,15 @@ SubDirBFileCount = 190
 DirWIFileCount = SubDirAFileCount + SubDirBFileCount
 
 class Test(unittest.TestCase):
+
+
     def setUp( self ):
         # Running a script to init data.      
-        self._CurrentDir = os.getcwd()
-        try:
-            os.chdir('tests')
-        except OSError:
-            pass
-        cmd = 'sh ./ProcessDirDataInit.sh'
-        res = os.system( cmd )
-        if res:
-            raise IOError( 'Failed to run setUp command: %s' % cmd)
+        self._CurrentDir = InitTempDir()
         
     def tearDown( self):
         # run script to undo stuff in setUp
-        os.system( 'sh ./ProcessDirDataCleanup.sh' )
-        os.chdir( self._CurrentDir )
+        CleanTempDir(self._CurrentDir)
 
     def testRetrieveAllFiles(self):
         ''' ProcessDirWithIssues : get all files from dirwithissues '''
