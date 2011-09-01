@@ -79,7 +79,9 @@ class testProcessDir(unittest.TestCase):
         Res = PD.Process()
         ExpRes = FileCache( Data = TestDirEmptyTopLevel_list )
 
+        Res.getAllEntries().sort(lambda x,y : cmp(x['directory'], y['directory']))
+          
         self.assertEqual( Res.getNumberOfEntries(), ExpRes.getNumberOfEntries() )        
-        self.assertEqual( Res.getAllEntries(), ExpRes.getAllEntries() )
+        self.assertTrue( Res.getAllEntries() == ExpRes.getAllEntries() )
 
         

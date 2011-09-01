@@ -40,6 +40,7 @@ TestDirB_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestDirB_FileB = 'FileB.txt'
 TestDirB_FileB_md5 = '9b36b2e89df94bc458d629499d38cf86'
 SubDirA = 'SubdirA'
+SubDirB = 'SubdirB'
 TestDirB_subA = TestDirB + SubDirA
 TestDirB_SubdirA_FileA = 'FileA.txt'
 TestDirB_SubdirA_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
@@ -64,8 +65,8 @@ TestDirB_selfdup_list = [
 
 TestDirEmptyTopLevel = './data_tmp/ProcessDir/TestDirEmptyTopLevel/'
 TestDirEmptyTopLevel_list = [   
-                    { 'md5': TestDirB_FileA_md5, 'filename': TestDirB_FileA, 'duplicates': [], 'directory': TestDirEmptyTopLevel },
-                    { 'md5': TestDirB_FileB_md5, 'filename': TestDirB_FileB, 'duplicates': [], 'directory': TestDirEmptyTopLevel },
                     { 'md5': TestDirB_SubdirA_FileA_md5, 'filename': TestDirB_SubdirA_FileA, 'duplicates': [], 'directory': TestDirEmptyTopLevel+SubDirA },
-                    { 'md5': TestDirB_SubdirA_FileB_md5, 'filename': TestDirB_SubdirA_FileB, 'duplicates': [], 'directory': TestDirEmptyTopLevel+SubDirA }]
+                    { 'md5': TestDirB_SubdirA_FileB_md5, 'filename': TestDirB_SubdirA_FileB, 'duplicates': [], 'directory': TestDirEmptyTopLevel+SubDirA },
+                    { 'md5': TestDirB_SubdirA_FileA_md5, 'filename': TestDirB_SubdirA_FileA, 'duplicates': [], 'directory': TestDirEmptyTopLevel+SubDirB },
+                    { 'md5': TestDirB_SubdirA_FileB_md5, 'filename': TestDirB_SubdirA_FileB, 'duplicates': [], 'directory': TestDirEmptyTopLevel+SubDirB }]
 
