@@ -19,8 +19,6 @@ SubDirBFileCount = 190
 DirWIFileCount = SubDirAFileCount + SubDirBFileCount
 
 class Test(unittest.TestCase):
-
-
     def setUp( self ):
         # Running a script to init data.      
         self._CurrentDir = InitTempDir()
