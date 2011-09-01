@@ -22,7 +22,8 @@
 # imports
 import unittest
 from ProcessDir.FileCache import FileCache
-import os
+from DirUtils import * #@UnusedWildImport
+from testData import * #@UnusedWildImport
 
 # test data
 TestDirA = './data_tmp/ProcessDir/TestDirA/'
@@ -40,11 +41,13 @@ TestSaveDir_FileA = 'FileA.txt'
 TestSaveDir_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestSaveDir_FileB = 'FileB.txt'
 TestSaveDir_FileB_md5 = '9b36b2e89df94bc458d629499d38cf86'
-TestSaveDir_entries = [{ 'md5': TestSaveDir_FileA_md5, 'filename': TestSaveDir_FileA }, { 'md5': TestSaveDir_FileB_md5, 'filename': TestSaveDir_FileB }]
+TestSaveDir_entries = [{ 'md5': TestSaveDir_FileA_md5, 'filename': TestSaveDir_FileA }, 
+                       { 'md5': TestSaveDir_FileB_md5, 'filename': TestSaveDir_FileB }]
 TestSaveDir_list_complete = [{  'md5': TestSaveDir_FileA_md5, 'filename': TestSaveDir_FileA, 
                                 'duplicates': [], 'directory': TestSaveDir }, 
                              {  'md5': TestSaveDir_FileB_md5, 'filename': TestSaveDir_FileB, 
                                 'duplicates': [], 'directory': TestSaveDir }]
+
 
 # addEntry
 MalformedEntry = { 'md5': 'sdfsdf', 'xxx': 'dvsdv' }
@@ -59,21 +62,12 @@ AddObjectsList = [{  'md5': 'SomeMd5Sum', 'filename': 'SomeFileName', 'duplicate
 class testFileCache(unittest.TestCase):     
     def setUp( self ):
         # Running a script to init data.      
-        self._CurrentDir = os.getcwd()
-        try:
-            os.chdir('tests')
-        except OSError:
-            pass
-        cmd = 'sh ./ProcessDirDataInit.sh'
-        res = os.system( cmd )
-        if res:
-            raise IOError( 'Failed to run setUp command: %s' % cmd)
+        self._CurrentDir = InitTempDir()
         
     def tearDown( self):
         # run script to undo stuff in setUp
-        os.system( 'sh ./ProcessDirDataCleanup.sh' )
-        os.chdir( self._CurrentDir )
-        
+        CleanTempDir(self._CurrentDir)
+                
     def testInstatiation( self ):
         """ Simple instantiation """
         FileCache()
@@ -83,6 +77,11 @@ class testFileCache(unittest.TestCase):
         FC = FileCache( Data = TestSaveDir_entries )
         self.assertEqual( FC.getAllEntries(), TestSaveDir_entries )
                 
+    def testGetAllEntriesMulitDir( self ):
+        """ Checking entries against known result (with multiple directories) """
+        FC = FileCache( Data = TestDirB_duppA_list )
+        self.assertEqual( FC.getAllEntries(), TestDirB_duppA_list )
+    
     def testEntriesCount( self ):
         """ Testing adding the number of entries when adding """
         FC = FileCache()

@@ -28,6 +28,8 @@ class FileCache:
         """ class constructor """
         self._FileCache = []
         self._Directory = Directory
+        self._MandatoryKeys = ['filename', 'md5', 'directory']
+
         if not os.path.isdir( Directory ):
             raise IOError( "Directory specified is not a directory: %s"% Directory )
         
@@ -48,7 +50,7 @@ class FileCache:
         return (self._FileCache == other.getAllEntries())
     
     def __str__( self ):
-        """ toString function. Just ouputs something fairly readable 
+        """ toString function. Just outputs something fairly readable 
         
         @return Human readable (not pretty) text of FileCache content
         """
@@ -82,12 +84,19 @@ class FileCache:
         
         @param Entry The entry to add (a dictionary with 'filename' and 'md5' )
         """
-        keys = Entry.keys()
-        if ('filename' not in keys) or ('md5' not in keys):
-            raise ValueError( "Malformed entry supplied" )
+        # directory defaults to current dir.
+        if not 'directory' in Entry.keys():
+            Entry['directory'] = '.'
+    
+        keys = Entry.keys()    
+        for mkey in self._MandatoryKeys:
+            if ( mkey not in keys):
+                raise ValueError( "Malformed entry supplied ('%s' not found)" % mkey )
 
+        # overwrite dupplicates.
         for i in range( len( self._FileCache ) ):
-            if self._FileCache[i]['filename'] == Entry['filename']:
+            if  self._FileCache[i]['filename'] == Entry['filename'] \
+                and self._FileCache[i]['directory'] == Entry['directory']:
                 self._FileCache[i] = Entry.copy()
                 return
         
