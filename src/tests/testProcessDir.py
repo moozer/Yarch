@@ -22,8 +22,7 @@
 # imports
 import unittest
 from ProcessDir.ProcessDir import ProcessDir, FileCache
-import os
-
+from DirUtils import * #@UnusedWildImport
 from testData import * #@UnusedWildImport
 
 # progress indicator test function
@@ -36,21 +35,12 @@ def SaveVerboseToList( Entry ):
 class testProcessDir(unittest.TestCase):     
     def setUp( self ):
         # Running a script to init data.      
-        self._CurrentDir = os.getcwd()
-        try:
-            os.chdir('tests')
-        except OSError:
-            pass
-        cmd = 'sh ./ProcessDirDataInit.sh'
-        res = os.system( cmd )
-        if res:
-            raise IOError( 'Failed to run setUp command: %s' % cmd)
+        self._CurrentDir = InitTempDir()
         
     def tearDown( self):
         # run script to undo stuff in setUp
-        os.system( 'sh ./ProcessDirDataCleanup.sh' )
-        os.chdir( self._CurrentDir )
-        
+        CleanTempDir(self._CurrentDir)
+
     def testExistingDir( self ):
         """ Simple instantiation with existing directory"""
         ProcessDir( TestDirA )
@@ -72,7 +62,10 @@ class testProcessDir(unittest.TestCase):
     def testFindDuplicates( self ):
         """ Check to find duplicate files (based on md5)"""
         PD_A = ProcessDir( TestDirB )
-        self.assertEqual( PD_A.Process( FileCache( Data = TestDirA_list ) ), FileCache( Data = TestDirB_duppA_list ) )
+        CompareCache = FileCache( Data = TestDirA_list )
+        ProcessResult = PD_A.Process( CompareCache )
+        ExpectedResult = FileCache( Data = TestDirB_duppA_list )
+        self.assertEqual( ProcessResult, ExpectedResult )
         
     def testProgressIndicator( self ):
         """ check that all data is piped to progress indicator also """

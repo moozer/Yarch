@@ -55,13 +55,13 @@ class ProcessDir:
         self._CacheFilename = '.md5dirlist'
 
         
-    def Process( self, CompareList = FileCache(), ProgressFunction = None, UseCache = False,
-                        LinksAreFatal = False ):
+    def Process( self,  CompareList = FileCache(), ProgressFunction = None, 
+                        UseCache = False, LinksAreFatal = False ):
         """ Processes the directory supplied in the constructor 
             recursively and returns the information extracted 
             a list of dictionaries with 'md5', 'filename' and 'duplicate' 
-            (a list refering to the indices of CompareList)
-            ProgressFunction is an optinal function to enableshowing progress. 
+            (a list referring to the indices of CompareList)
+            ProgressFunction is an optional function to enables showing progress. 
             It takes the current ('md5', 'filelist', 'duplicates') dictionary as parameter
         @param UseCache: If true, any cache is true if found, otherwise ignored
         """
@@ -70,7 +70,6 @@ class ProcessDir:
         self._ProgressFunction = ProgressFunction
         self._UseCache = UseCache
         self._LinksAreFatal = LinksAreFatal
-
         return self._ProcessDir( self._BaseDir )
 
 
@@ -87,70 +86,86 @@ class ProcessDir:
     def _ProcessDir( self, DirToProcess ):
         """ internal function to do the actual processing """
         # process all entries (files and dirs, dirs are put in a seperate list
-  
         Subdirlist = [] # list of subdirs, to be processed
-        Cache = FileCache( DirToProcess )
 
-        # Cache handling
-        if self._UseCache:
-            try:
-                Cache.loadCache()
-            except IOError:
-                pass # IOError here means that cache file does not exist
+        # we always use cahse (might be in memory)
+        Cache = FileCache( DirToProcess )
+#        
+#        # Cache handling
+#        if self._UseCache:
+#            try:
+#                Cache.loadCache()
+#            except IOError:
+#                pass # IOError here means that cache file does not exist
 
         # loop through all entries
-        for filename in os.listdir( DirToProcess ):
-            if filename == self._CacheFilename:
-                continue
+        for CurDir, dirs, files in os.walk( DirToProcess ):
+            # Cache handling
+            if self._UseCache:
+                if CurDir != Cache.GetDirectory():
+                    print "new directory cache"
+                    Cache.saveCache() # save before new cache is initialized
+                    Cache = FileCache( CurDir )
+                try:
+                    Cache.loadCache()
+                except IOError:
+                    pass # IOError here means that cache file does not exist
+
+            for filename in files:
+                if filename == self._CacheFilename:
+                    continue
+                    
+                FullFilename = os.path.join( CurDir, filename )
                 
-            FullFilename = os.path.join( DirToProcess, filename )
-            
-            if os.path.islink( FullFilename ):
-                if self._LinksAreFatal:
-                    raise IOError( "File is a link: " + FullFilename)
+                if os.path.islink( FullFilename ):
+                    if self._LinksAreFatal:
+                        raise IOError( "File is a link: " + FullFilename)
+                    else:
+                        continue # skip
+                    
+    #            # if entry is a directory
+    #            if os.path.isdir( FullFilename ):
+    #                Subdirlist.append( FullFilename )
+    #                continue
+                
+                # handle file
+                if self._UseCache:
+                    FileData = Cache.getEntry( filename )
                 else:
-                    continue # skip
-                
-            # if entry is a directory
-            if os.path.isdir( FullFilename ):
-                Subdirlist.append( FullFilename )
-                continue
-            
-            # handle file
-            FileData = Cache.getEntry( filename )
-            if not FileData:
-                FileData = self._ProcessFile( FullFilename )
- 
-            # check for duplicates
-            ResDict = {'md5':FileData['md5'], 
-                       'filename':filename, 
-                       'duplicates': self._ProcessDuplicate(FileData), 
-                       'directory':DirToProcess}
-
-            Cache.addEntry( ResDict )
+                    FileData = None
+                    
+                if not FileData:
+                    FileData = self._ProcessFile( FullFilename )
      
-            # output/update/whatever for each file
-            if self._ProgressFunction:
-                self._ProgressFunction( ResDict )
+                # check for duplicates
+                ResDict = {'md5':FileData['md5'], 
+                           'filename':filename, 
+                           'duplicates': self._ProcessDuplicate(FileData), 
+                           'directory':CurDir}
 
-        
+                # always add to Cache (might be in memory only)
+                Cache.addEntry( ResDict )
+         
+                # output/update/whatever for each file
+                if self._ProgressFunction:
+                    self._ProgressFunction( ResDict )
+                   
         # Cache handling. save to disk
         if self._UseCache:
             Cache.saveCache()
 
-        # process all subdirs
-        for subdir in Subdirlist:
-            Cache += self._ProcessDir( subdir )
+#        # process all sub dirs
+#        for subdir in Subdirlist:
+#            Cache += self._ProcessDir( subdir )
+        if self._UseCache:
+            print "After %s cache is size %i"%(DirToProcess, Cache.getNumberOfEntries() )
 
         return Cache
-
-   
-
-
+      
 def DeleteByList( CacheList, VerboseFunction = None ):
     """ delete every item on supplied list
-    
     @param CacheList a FileCache object that hold the files to be deleted 
+    @param VerboseFunction A function that takes a string as parameter. Used for progress indication. 
     """
     for Entry in CacheList.getAllEntries():
         if len( Entry['duplicates'] ) == 0:
