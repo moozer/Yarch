@@ -4,8 +4,7 @@ Created on Nov 20, 2010
 @author: morten
 '''
 import unittest
-from ProcessDir.ProcessDir import ProcessDir, FileCache
-import os
+from ProcessDir.ProcessDir import ProcessDir
 from DirUtils import *
 
 TestDirWI = "data_tmp/DirWithIssues"
