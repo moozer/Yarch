@@ -25,7 +25,11 @@ class FileCache:
     """ class to handle caching of md5 sums """
     
     def __init__( self, Directory = '.', Data = None, CacheFilename = '.md5dirlist' ):
-        """ class constructor """
+        """ class constructor 
+        @param Directory: The directory to work in
+        @param Data: Initial data to use (uses addEntry)  
+        @param CacheFilename: The filename to use for the datafile 
+        """
         self._FileCache = []
         self._Directory = Directory
         self._MandatoryKeys = ['filename', 'md5', 'directory']
