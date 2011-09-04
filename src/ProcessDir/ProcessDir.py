@@ -100,6 +100,7 @@ class ProcessDir:
 
         # loop through all entries
         for CurDir, dirs, files in os.walk( DirToProcess ):
+      
             # Cache handling
             if self._UseCache:
                 if CurDir != Cache.GetDirectory():
@@ -141,7 +142,7 @@ class ProcessDir:
                 ResDict = {'md5':FileData['md5'], 
                            'filename':filename, 
                            'duplicates': self._ProcessDuplicate(FileData), 
-                           'directory':CurDir}
+                           'directory': os.path.relpath(CurDir, DirToProcess) }
 
                 # always add to Cache (might be in memory only)
                 Cache.addEntry( ResDict )
@@ -158,7 +159,7 @@ class ProcessDir:
 #        for subdir in Subdirlist:
 #            Cache += self._ProcessDir( subdir )
         if self._UseCache:
-            print "After %s cache is size %i"%(DirToProcess, Cache.getNumberOfEntries() )
+            print "After %s (aka. %s) cache is size %i"%(DirToProcess, os.path.relpath(CurDir, DirToProcess), Cache.getNumberOfEntries() )
 
         return Cache
       

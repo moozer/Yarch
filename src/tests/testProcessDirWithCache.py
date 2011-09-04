@@ -22,7 +22,7 @@
 # imports
 import unittest
 from ProcessDir.ProcessDir import ProcessDir, FileCache
-import os
+from DirUtils import *
 
 TestcaseBaseDir = './data_tmp/ProcessDirWithCache/'
 
@@ -31,25 +31,29 @@ TestDirA = TestcaseBaseDir + 'BadMd5Sum/'
 TestDirA_FileA = 'FileA.txt'
 TestDirA_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestDirA_FileA_md5_cached = 'ThisIsABadMd5Sum'
-TestDirA_list_cached = [   { 'md5': TestDirA_FileA_md5_cached, 'filename': TestDirA_FileA, 'duplicates': [], 'directory': TestDirA }]
+TestDirA_list_cached = [   { 'md5': TestDirA_FileA_md5_cached, 'filename': TestDirA_FileA, 
+                            'duplicates': [], 'directory': '.' }]
 
 # testdirB: no dirlist file
 TestDirB = TestcaseBaseDir + 'NoDirlistfile/'
 TestDirB_FileA = 'FileA.txt'
 TestDirB_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
-TestDirB_result = [   { 'md5': TestDirB_FileA_md5, 'filename': TestDirB_FileA, 'duplicates': [], 'directory': TestDirB }]
+TestDirB_result = [   { 'md5': TestDirB_FileA_md5, 'filename': TestDirB_FileA, 
+                       'duplicates': [], 'directory': '.' }]
 
 # testdirB: no dirlist file
 TestDirC = TestcaseBaseDir + 'BadDirlistFile/'
 TestDirC_FileA = 'FileA.txt'
 TestDirC_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
-TestDirC_result = [   { 'md5': TestDirC_FileA_md5, 'filename': TestDirC_FileA, 'duplicates': [], 'directory': TestDirB }]
+TestDirC_result = [   { 'md5': TestDirC_FileA_md5, 'filename': TestDirC_FileA, 
+                       'duplicates': [], 'directory': '.' }]
 
 # testdirD dir with link
 TestDirD = TestcaseBaseDir + 'DirWithLink/'
 TestDirD_FileA = 'FileA.txt'
 TestDirD_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
-TestDirD_list = [   { 'md5': TestDirD_FileA_md5, 'filename': TestDirD_FileA, 'duplicates': [], 'directory': TestDirD }]
+TestDirD_list = [   { 'md5': TestDirD_FileA_md5, 'filename': TestDirD_FileA, 
+                     'duplicates': [], 'directory': '.' }]
 
 # progress indicator test function
 SavedList = []
@@ -61,20 +65,11 @@ def SaveOutputToList( Entry ):
 class testProcessDirWithCache(unittest.TestCase):     
     def setUp( self ):
         # Running a script to init data.      
-        self._CurrentDir = os.getcwd()
-        try:
-            os.chdir('tests')
-        except OSError:
-            pass
-        cmd = 'sh ./ProcessDirDataInit.sh'
-        res = os.system( cmd )
-        if res:
-            raise IOError( 'Failed to run setUp command: %s' % cmd)
+        self._CurrentDir = InitTempDir()
         
     def tearDown( self):
         # run script to undo stuff in setUp
-        os.system( 'sh ./ProcessDirDataCleanup.sh' )
-        os.chdir( self._CurrentDir )
+        CleanTempDir(self._CurrentDir)
         
     def testWithoutCache( self ):
         """ Check that processDir accept the UseCache parameter """
@@ -114,8 +109,9 @@ class testProcessDirWithCache(unittest.TestCase):
         
         PD2 = ProcessDir( TestDirB )
         res = PD2.Process( UseCache = True )
+        expres =  FileCache( Data = TestDirB_result )
 
-        self.assertEqual( res, FileCache( Data = TestDirB_result ))
+        self.assertEqual( res, expres )
         
     def testBadDirlistFile( self ):
         """ check proper IOError ecception when dirlist file is malformed """
