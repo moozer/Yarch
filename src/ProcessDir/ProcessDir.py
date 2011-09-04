@@ -86,7 +86,7 @@ class ProcessDir:
     def _ProcessDir( self, DirToProcess ):
         """ internal function to do the actual processing """
         # process all entries (files and dirs, dirs are put in a seperate list
-        Subdirlist = [] # list of subdirs, to be processed
+        #Subdirlist = [] # list of subdirs, to be processed
 
         # we always use cahse (might be in memory)
         Cache = FileCache( DirToProcess )
@@ -99,12 +99,11 @@ class ProcessDir:
 #                pass # IOError here means that cache file does not exist
 
         # loop through all entries
-        for CurDir, dirs, files in os.walk( DirToProcess ):
+        for CurDir, dirs, files in os.walk( DirToProcess ): #@UnusedVariable
       
             # Cache handling
             if self._UseCache:
                 if CurDir != Cache.GetDirectory():
-                    print "new directory cache"
                     Cache.saveCache() # save before new cache is initialized
                     Cache = FileCache( CurDir )
                 try:
@@ -158,8 +157,6 @@ class ProcessDir:
 #        # process all sub dirs
 #        for subdir in Subdirlist:
 #            Cache += self._ProcessDir( subdir )
-        if self._UseCache:
-            print "After %s (aka. %s) cache is size %i"%(DirToProcess, os.path.relpath(CurDir, DirToProcess), Cache.getNumberOfEntries() )
 
         return Cache
       
