@@ -62,7 +62,7 @@ class testProcessDir(unittest.TestCase):
     def testFindDuplicates( self ):
         """ Check to find duplicate files (based on md5)"""
         PD_A = ProcessDir( TestDirB )
-        CompareCache = FileCache( Data = TestDirA_list )
+        CompareCache = FileCache( Directory = TestDirA, Data = TestDirA_list )
         ProcessResult = PD_A.Process( CompareCache )
         ExpectedResult = FileCache( Data = TestDirB_duppA_list )
         self.assertEqual( ProcessResult, ExpectedResult )
