@@ -164,7 +164,7 @@ class ProcessDir:
         return Cache
       
 def DeleteByList( CacheList, VerboseFunction = None ):
-    """ delete every item on supplied list
+    """ delete every item on supplied list with duplicates
     @param CacheList a FileCache object that hold the files to be deleted 
     @param VerboseFunction A function that takes a string as parameter. Used for progress indication. 
     """
@@ -175,5 +175,5 @@ def DeleteByList( CacheList, VerboseFunction = None ):
         else:
             if VerboseFunction:
                 VerboseFunction( "Deleting " + Entry['filename'] );
-            os.remove( os.path.join( Entry['directory'], Entry['filename'] ) )
+            os.remove( os.path.join( CacheList.GetDirectory(), Entry['directory'], Entry['filename'] ) )
     

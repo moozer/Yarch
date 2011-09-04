@@ -22,7 +22,7 @@
 # imports
 import unittest
 from ProcessDir.ProcessDir import DeleteByList, ProcessDir, FileCache
-import os
+from DirUtils import * #@UnusedWildImport
 
 # duplicate data list
 DeleteListDir = './data_tmp/ProcessDirUtils/DeleteListDir/'
@@ -30,9 +30,12 @@ DeleteListDir_FileA = 'FileA.txt'
 DeleteListDir_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 DeleteListDir_FileB = 'FileB.txt'
 DeleteListDir_FileB_md5 = '9b36b2e89df94bc458d629499d38cf86'
-DeleteListDir_list = [   { 'md5': DeleteListDir_FileA_md5, 'filename': DeleteListDir_FileA, 'duplicates': [2], 'directory': DeleteListDir },
-                         { 'md5': DeleteListDir_FileA_md5, 'filename': DeleteListDir_FileB, 'duplicates': [], 'directory': DeleteListDir }]
-DeleteListDir_AfterDelete = [ { 'md5': DeleteListDir_FileB_md5, 'filename': DeleteListDir_FileB, 'duplicates': [], 'directory': DeleteListDir }]
+DeleteListDir_list = [   { 'md5': DeleteListDir_FileA_md5, 'filename': DeleteListDir_FileA, 
+                          'duplicates': [2], 'directory': '.' },
+                         { 'md5': DeleteListDir_FileA_md5, 'filename': DeleteListDir_FileB, 
+                          'duplicates': [], 'directory': '.' }]
+DeleteListDir_AfterDelete = [ { 'md5': DeleteListDir_FileB_md5, 'filename': DeleteListDir_FileB, 
+                               'duplicates': [], 'directory': '.' }]
 
 # progress indicator test function
 SavedList = []
@@ -44,28 +47,19 @@ def SaveOutputToList( Entry ):
 class testProcessDirUtils(unittest.TestCase):     
     def setUp( self ):
         # Running a script to init data.      
-        self._CurrentDir = os.getcwd()
-        try:
-            os.chdir('tests')
-        except OSError:
-            pass
-        cmd = 'sh ./ProcessDirDataInit.sh'
-        res = os.system( cmd )
-        if res:
-            raise IOError( 'Failed to run setUp command: %s' % cmd)
+        self._CurrentDir = InitTempDir()
         
     def tearDown( self):
         # run script to undo stuff in setUp
-        os.system( 'sh ./ProcessDirDataCleanup.sh' )
-        os.chdir( self._CurrentDir )
-        #~ 
+        CleanTempDir(self._CurrentDir)
+
     def testDelete( self ):
         """ Check that processDir accept the UseCache parameter """
-        DeleteByList( FileCache( Data = DeleteListDir_list ) )
+        DeleteByList( FileCache( Directory = DeleteListDir, Data = DeleteListDir_list ) )
         Result = ProcessDir( DeleteListDir ).Process( UseCache = False )
         self.assertTrue( Result ==  FileCache( Data = DeleteListDir_AfterDelete ) )
         
     def testDeleteVerboseOutput( self ):
         """ Checks if the verbose output is called for every file """
-        DeleteByList( FileCache( Data = DeleteListDir_list ), VerboseFunction = SaveOutputToList )
+        DeleteByList( FileCache( Directory = DeleteListDir, Data = DeleteListDir_list ), VerboseFunction = SaveOutputToList )
         self.assertTrue( len(SavedList) >= len( DeleteListDir_list ) )
