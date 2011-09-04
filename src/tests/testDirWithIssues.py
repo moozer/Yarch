@@ -11,9 +11,9 @@ TestDirWI = "data_tmp/DirWithIssues"
 TestDirWIWithCache = "data_tmp/DirWithIssuesWithMd5"
 
 SubDirA = "prosilver"
-SubDirAFileCount = 223
+SubDirAFileCount = 1+12+64+98+16+37 # . 1, imageset/en 12, imageset 64, template 98, themes 16, themes/image 37
 SubDirB = "subsilver2"
-SubDirBFileCount = 190
+SubDirBFileCount = 1+49+24+97+2+19  # . 1, imageset 49, imageset/en 24, template 97, theme 2, theme/images 19
 
 DirWIFileCount = SubDirAFileCount + SubDirBFileCount
 
