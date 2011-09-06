@@ -61,7 +61,7 @@ class ProcessDir:
             recursively and returns the information extracted 
             a list of dictionaries with 'md5', 'filename' and 'duplicate' 
             (a list referring to the indices of CompareList)
-            ProgressFunction is an optional function to enables showing progress. 
+        @param ProgressFunction: An optional function to enables showing progress. \
             It takes the current ('md5', 'filelist', 'duplicates') dictionary as parameter
         @param UseCache: If true, any cache is true if found, otherwise ignored
         """
