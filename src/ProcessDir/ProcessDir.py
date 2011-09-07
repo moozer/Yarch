@@ -20,9 +20,8 @@
 #       MA 02110-1301, USA.
 
 import os
-from ProcessFile.ProcessFile import ProcessFile
+from ProcessFile.checksum import create_checksum
 from FileCache import FileCache
-
 
 def DumpFilelist( SomeText, Filelist ):
     ''' Utility function for nice output
@@ -51,12 +50,18 @@ class ProcessDir:
         if not os.path.isdir( BaseDir ):
             raise IOError( "Directory does not exist: %s"%BaseDir )
         self._BaseDir = BaseDir
-        self._ProcessFile = ProcessFile
         self._CacheFilename = '.md5dirlist'
+        self._ValidationFailed = False
 
+    def Validate(self):
+        """ processes the directory and compare the calculated md5 with the stored from cachefile
+        @return True on succesful validation"""
+        self.Process(Validate = True, UseCache = True)
+        return not self._ValidationFailed
         
     def Process( self,  CompareList = FileCache(), ProgressFunction = None, 
-                        UseCache = False, LinksAreFatal = False ):
+                        UseCache = False, LinksAreFatal = False,
+                        Validate = False ):
         """ Processes the directory supplied in the constructor 
             recursively and returns the information extracted 
             a list of dictionaries with 'md5', 'filename' and 'duplicate' 
@@ -64,12 +69,14 @@ class ProcessDir:
         @param ProgressFunction: An optional function to enables showing progress. \
             It takes the current ('md5', 'filelist', 'duplicates') dictionary as parameter
         @param UseCache: If true, any cache is true if found, otherwise ignored
+        @param Validate:if true, calculated md5 sum are compared to stored ones.
         """
 
         self._CompareList = CompareList.getAllEntries()
         self._ProgressFunction = ProgressFunction
         self._UseCache = UseCache
         self._LinksAreFatal = LinksAreFatal
+        self._Validate = Validate
         return self._ProcessDir( self._BaseDir )
 
 
@@ -83,9 +90,49 @@ class ProcessDir:
         return Duplicates
 
 
+
+    def _ProcessFile(self, DirToProcess, Cache, CurDir, filename):
+        # skip the cache file
+        if filename == self._CacheFilename:
+            return None
+        
+        FullFilename = os.path.join(CurDir, filename)
+        if os.path.islink(FullFilename):
+            if self._LinksAreFatal:
+                raise IOError("File is a link: " + FullFilename) 
+            else: 
+                return None # skip
+        # else: just continue
+
+        # load cache if appropriate file
+        if self._UseCache:
+            FileData = Cache.getEntry(filename)
+        else:
+            FileData = None
+
+        if self._Validate:
+            if not FileData:
+                self._ValidationFailed = True
+            else:
+                NewMd5 = create_checksum( FullFilename )
+                if FileData['md5'] != NewMd5:
+                    self._ValidationFailed = True
+            
+        # if not using the cache or file not in cache
+        if not FileData:
+            md5 = create_checksum( FullFilename )
+            FileData = {"md5": md5}
+            
+        # check for duplicates and build return dict
+        ResDict = {'md5':FileData['md5'], 'filename':filename, 
+                   'duplicates':self._ProcessDuplicate(FileData), 
+                   'directory':os.path.relpath(CurDir, DirToProcess)}
+        
+        return ResDict
+
     def _ProcessDir( self, DirToProcess ):
         """ internal function to do the actual processing """
-         # we always use cahse (might be in memory)
+        # we always use cache (might be in memory)
         Cache = FileCache( DirToProcess )
 
         # loop through all entries
@@ -101,32 +148,13 @@ class ProcessDir:
                 except IOError:
                     pass # IOError here means that cache file does not exist
 
+            # loop through files
             for filename in files:
-                if filename == self._CacheFilename:
-                    continue
-                    
-                FullFilename = os.path.join( CurDir, filename )
+                ResDict = self._ProcessFile(DirToProcess, Cache, CurDir, filename)
                 
-                if os.path.islink( FullFilename ):
-                    if self._LinksAreFatal:
-                        raise IOError( "File is a link: " + FullFilename)
-                    else:
-                        continue # skip
-                    
-                # handle file
-                if self._UseCache:
-                    FileData = Cache.getEntry( filename )
-                else:
-                    FileData = None
-                    
-                if not FileData:
-                    FileData = self._ProcessFile( FullFilename )
-     
-                # check for duplicates
-                ResDict = {'md5':FileData['md5'], 
-                           'filename':filename, 
-                           'duplicates': self._ProcessDuplicate(FileData), 
-                           'directory': os.path.relpath(CurDir, DirToProcess) }
+                # checking if file was skipped for some reason
+                if ResDict == None:
+                    continue
 
                 # always add to Cache (might be in memory only)
                 Cache.addEntry( ResDict )
@@ -140,7 +168,8 @@ class ProcessDir:
             Cache.saveCache()
 
         return Cache
-      
+
+
 def DeleteByList( CacheList, VerboseFunction = None ):
     """ delete every item on supplied list with duplicates
     @param CacheList a FileCache object that hold the files to be deleted 

@@ -127,3 +127,21 @@ class testProcessDirWithCache(unittest.TestCase):
     def testDirWithLink_Fatal( self ):
         """ Check that processDir fails om links"""
         self.assertRaises( IOError, ProcessDir( TestDirD ).Process, LinksAreFatal = True )
+        
+    def testSimpleValidate(self):
+        """ check if validation (as opposed to "process") works"""
+        if os.path.exists( TestDirB+'.md5dirlist' ):
+            raise IOError( ".md5dirlist must no be present" )
+ 
+        PD = ProcessDir( TestDirB )
+        PD.Process( UseCache = True ) # generates the cache
+        
+        PD2 = ProcessDir( TestDirB )
+        res = PD2.Validate()
+        self.assertEqual( res, True )
+        
+    def testValidateBadmd5(self):
+        PD2 = ProcessDir( TestDirA )
+        res = PD2.Validate()
+        self.assertEqual( res, False )
+        
