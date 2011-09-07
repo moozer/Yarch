@@ -1,0 +1,13 @@
+For this to works, you must have autofs running and automounting the resulting .squashfs file.
+
+Hints...
+
+in /etc/auto.master I added the line
+/mnt/moozer/squashfs /etc/auto.squashfs.loop --timeout=30 --ghost
+
+and created a file called /etc/auto.squashfs.loop containing
+* -fstype=squashfs,ro,loop :/home/moozer/squashfs/&.squashfs
+
+Restart autofs after changing the config files.
+This makes all nn.squashfs files placed in /home/moozer/squashfs to be accessible at /mnt/moozer/squashfs/nn
+
