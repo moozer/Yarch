@@ -47,8 +47,12 @@ if __name__ == '__main__':
     # 1) go though the directory and generate the .md5listdir files.
     print "Processing filen in and below %s"%(opt.SourceDir,)
     PD = ProcessDir(opt.SourceDir)
-    PD.Process(UseCache=True, ProgressFunction=ShowProgress)
+    Manifest = PD.Process(UseCache=True, ProgressFunction=ShowProgress)
     print "\rDone calculating md5 sums."
+    
+    # 1.1) save manifest for later...
+    # Manifest.saveCache( "%s.manifest"%(opt.SourceDir) )
+    # TODO: Manifest list is wrong. 
     
     # 2) squashfs the dir
     (SourceTop, SqfsFileBase) = os.path.split( opt.SourceDir )
