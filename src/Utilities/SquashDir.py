@@ -3,6 +3,7 @@ Created on Sep 6, 2011
 
 @author: morten
 '''
+from PythonPathUtil import AppendSrcToPythonPath #@UnusedImport
 from optparse import OptionParser
 from ProcessDir.ProcessDir import ProcessDir
 import sys, os
@@ -10,19 +11,7 @@ import sys, os
 def ParseCmdLineOptions():
     """ utility function to handle command line options. """
     parser = OptionParser()
-#    parser.add_option("-M", "--master", dest="MasterDir", default=".",
-#                      help="Primary directory", metavar="MASTERDIR")
-#    parser.add_option("-m", "--master-list", dest="MasterList", 
-#                      help="Read from file instead of doing the work" )
-#    parser.add_option("-D", "--dump-to-file", dest="DumpFile", 
-#                      help="Save entire list to disk" )    
-#                      
-#    parser.add_option("-S", "--secondary", dest="SecondaryDir", default="",
-#                      help="Secondary directory", metavar="SECONDARYDIR")
-#    parser.add_option( "-q", action="store_false", dest="verbose", default=True,
-#                      help="quiet mode (opposite of verbose)" )              
-#    parser.add_option( "-v", action="store_true", dest="verbose",
-#                      help="verbose mode (opposite of quiet)" )                 
+                
     parser.add_option( "-d", dest="SourceDir", 
                        help="The directory to read from", default = '.' )
     parser.add_option( "-o", dest="OutputDir", default='.',
