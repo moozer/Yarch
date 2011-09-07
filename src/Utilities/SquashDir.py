@@ -58,7 +58,9 @@ if __name__ == '__main__':
     (SourceTop, SqfsFileBase) = os.path.split( opt.SourceDir )
     SqfsFile = os.path.join( opt.OutputDir, "%s.squashfs" % (SqfsFileBase,) )
     print "Creating squashfs file %s" %(SqfsFile)
-    cmd = "mksquashfs %s %s -noappend -all-root" %(opt.SourceDir, SqfsFile)
+    # This creates a squashfs with the current user as owner.
+    # TODO: Uid mismatch when copying...
+    cmd = "mksquashfs %s %s -noappend" %(opt.SourceDir, SqfsFile)
     os.system(cmd)
     
     AccessLink = os.path.join( opt.AccessDir, SqfsFileBase )
@@ -66,4 +68,10 @@ if __name__ == '__main__':
     os.system( cmd2 )
     
     # 3) validated the .md5listdir values
+    print "Validating archive"
+    ValidationSuccess = ProcessDir(opt.AccessDir).Validate()
+    if ValidationSuccess:
+        print "Archive matches precalculated sums"
+    else:
+        print "Warning: md5 validation failed"
     pass
