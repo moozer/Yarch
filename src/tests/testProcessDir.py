@@ -84,4 +84,5 @@ class testProcessDir(unittest.TestCase):
         self.assertEqual( Res.getNumberOfEntries(), ExpRes.getNumberOfEntries() )        
         self.assertTrue( Res.getAllEntries() == ExpRes.getAllEntries() )
 
+
         

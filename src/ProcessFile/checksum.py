@@ -12,9 +12,9 @@ def create_checksum(path):
         fp = open(path)
         checksum = hashlib.md5()
         while True:
-            buffer = fp.read(8192)
-            if not buffer:break
-            checksum.update(buffer)
+            buf = fp.read(8192)
+            if not buf:break
+            checksum.update(buf)
         fp.close()
         # changed .digest() to .hexdigest() for easier verification using md5sum command
         checksum = checksum.hexdigest()
