@@ -85,18 +85,8 @@ class ProcessDir:
 
     def _ProcessDir( self, DirToProcess ):
         """ internal function to do the actual processing """
-        # process all entries (files and dirs, dirs are put in a seperate list
-        #Subdirlist = [] # list of subdirs, to be processed
-
-        # we always use cahse (might be in memory)
+         # we always use cahse (might be in memory)
         Cache = FileCache( DirToProcess )
-#        
-#        # Cache handling
-#        if self._UseCache:
-#            try:
-#                Cache.loadCache()
-#            except IOError:
-#                pass # IOError here means that cache file does not exist
 
         # loop through all entries
         for CurDir, dirs, files in os.walk( DirToProcess ): #@UnusedVariable
@@ -123,11 +113,6 @@ class ProcessDir:
                     else:
                         continue # skip
                     
-    #            # if entry is a directory
-    #            if os.path.isdir( FullFilename ):
-    #                Subdirlist.append( FullFilename )
-    #                continue
-                
                 # handle file
                 if self._UseCache:
                     FileData = Cache.getEntry( filename )
@@ -153,10 +138,6 @@ class ProcessDir:
         # Cache handling. save to disk
         if self._UseCache:
             Cache.saveCache()
-
-#        # process all sub dirs
-#        for subdir in Subdirlist:
-#            Cache += self._ProcessDir( subdir )
 
         return Cache
       
