@@ -56,7 +56,7 @@ class ProcessDir:
     def Validate(self):
         """ processes the directory and compare the calculated md5 with the stored from cachefile
         @return True on succesful validation"""
-        self.Process(Validate = True, UseCache = True)
+        self.Process(Validate = True, UseCache = False)
         return not self._ValidationFailed
         
     def Process( self,  CompareList = FileCache(), ProgressFunction = None, 
@@ -105,7 +105,7 @@ class ProcessDir:
         # else: just continue
 
         # load cache if appropriate file
-        if self._UseCache:
+        if self._UseCache or self._Validate:
             FileData = Cache.getEntry(filename)
         else:
             FileData = None
@@ -139,9 +139,10 @@ class ProcessDir:
         for CurDir, dirs, files in os.walk( DirToProcess ): #@UnusedVariable
       
             # Cache handling
-            if self._UseCache:
+            if self._UseCache or self._Validate:
                 if CurDir != Cache.GetDirectory():
-                    Cache.saveCache() # save before new cache is initialized
+                    if self._UseCache:
+                        Cache.saveCache() # save before new cache is initialized
                     Cache = FileCache( CurDir )
                 try:
                     Cache.loadCache()

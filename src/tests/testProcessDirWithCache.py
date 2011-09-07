@@ -131,7 +131,7 @@ class testProcessDirWithCache(unittest.TestCase):
     def testSimpleValidate(self):
         """ check if validation (as opposed to "process") works"""
         if os.path.exists( TestDirB+'.md5dirlist' ):
-            raise IOError( ".md5dirlist must no be present" )
+            raise IOError( ".md5dirlist must not be present" )
  
         PD = ProcessDir( TestDirB )
         PD.Process( UseCache = True ) # generates the cache
