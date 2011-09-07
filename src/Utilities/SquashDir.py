@@ -58,7 +58,8 @@ if __name__ == '__main__':
     
     # 3) validated the .md5listdir values
     print "Validating archive"
-    ValidationSuccess = ProcessDir(opt.AccessDir).Validate()
+    ValidationSuccess = ProcessDir(opt.AccessDir).Validate( ValidateProgressFunction=ShowProgress)
+    print "\nValidation done"
     if ValidationSuccess:
         print "Archive matches precalculated sums"
     else:

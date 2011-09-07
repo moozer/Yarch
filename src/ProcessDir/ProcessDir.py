@@ -53,10 +53,10 @@ class ProcessDir:
         self._CacheFilename = '.md5dirlist'
         self._ValidationFailed = False
 
-    def Validate(self):
+    def Validate(self, ValidateProgressFunction = None):
         """ processes the directory and compare the calculated md5 with the stored from cachefile
         @return True on succesful validation"""
-        self.Process(Validate = True, UseCache = False)
+        self.Process(Validate = True, UseCache = False, ProgressFunction = ValidateProgressFunction)
         return not self._ValidationFailed
         
     def Process( self,  CompareList = FileCache(), ProgressFunction = None, 
