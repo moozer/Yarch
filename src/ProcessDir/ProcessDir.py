@@ -134,7 +134,8 @@ class ProcessDir:
         """ internal function to do the actual processing """
         # we always use cache (might be in memory)
         Cache = FileCache( DirToProcess )
-
+        CompleteCache = FileCache()
+        
         # loop through all entries
         for CurDir, dirs, files in os.walk( DirToProcess ): #@UnusedVariable
       
@@ -143,6 +144,7 @@ class ProcessDir:
                 if CurDir != Cache.GetDirectory():
                     if self._UseCache:
                         Cache.saveCache() # save before new cache is initialized
+                    CompleteCache += Cache
                     Cache = FileCache( CurDir )
                 try:
                     Cache.loadCache()
@@ -168,7 +170,9 @@ class ProcessDir:
         if self._UseCache:
             Cache.saveCache()
 
-        return Cache
+        # get the last entries also and return
+        CompleteCache += Cache
+        return CompleteCache
 
 
 def DeleteByList( CacheList, VerboseFunction = None ):

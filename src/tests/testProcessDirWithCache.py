@@ -23,6 +23,7 @@
 import unittest
 from ProcessDir.ProcessDir import ProcessDir, FileCache
 from DirUtils import *
+from testData import * #@UnusedWildImport
 
 TestcaseBaseDir = './data_tmp/ProcessDirWithCache/'
 
@@ -145,3 +146,13 @@ class testProcessDirWithCache(unittest.TestCase):
         res = PD2.Validate()
         self.assertEqual( res, False )
         
+    def testRecursiveWithCache( self ):
+        """ Check return value of multilevel dir tree with empty toplevel dir"""
+        PD = ProcessDir( TestDirEmptyTopLevel )
+        Res = PD.Process( UseCache=True )
+        ExpRes = FileCache( Data = TestDirEmptyTopLevel_list )
+
+        Res.getAllEntries().sort(lambda x,y : cmp(x['directory'], y['directory']))
+          
+        self.assertEqual( Res.getNumberOfEntries(), ExpRes.getNumberOfEntries() )        
+        self.assertTrue( Res.getAllEntries() == ExpRes.getAllEntries() )
