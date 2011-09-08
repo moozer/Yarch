@@ -24,15 +24,18 @@ import os, csv
 class FileCache:
     """ class to handle caching of md5 sums """
     
-    def __init__( self, Directory = '.', Data = None, CacheFilename = '.md5dirlist' ):
+    def __init__( self, Directory = '.', Data = None, 
+                  CacheFilename = '.md5dirlist', BaseDir = '.' ):
         """ class constructor 
         @param Directory: The directory to work in
         @param Data: Initial data to use (uses addEntry)  
         @param CacheFilename: The filename to use for the datafile 
+        @param BaseDir: The directory to be appended to 'directory' in entries
         """
         self._FileCache = []
         self._Directory = Directory
         self._MandatoryKeys = ['filename', 'md5', 'directory']
+        self._BaseDir = BaseDir
 
         if not os.path.isdir( Directory ):
             raise IOError( "Directory specified is not a directory: %s"% Directory )
@@ -90,7 +93,7 @@ class FileCache:
         """
         # directory defaults to current dir.
         if not 'directory' in Entry.keys():
-            Entry['directory'] = '.'
+            Entry['directory'] = self._BaseDir
     
         keys = Entry.keys()    
         for mkey in self._MandatoryKeys:
@@ -129,7 +132,7 @@ class FileCache:
         """ Removes all entries from the cache """
         self._FileCache = []
 
-    def loadCache( self, Filename = None, BaseDir = '.' ):
+    def loadCache( self, Filename = None ):
         """ loads data from file on disc and saves in the internal var  self._FileCache
         using filenames as keys 
         """
@@ -150,7 +153,7 @@ class FileCache:
                 raise ValueError( "Malformed cache file: " + FullCacheFilename)
                 
             # use filename as key
-            self.addEntry( { 'directory': BaseDir, 'filename': row[1], 'md5': row[0] } )
+            self.addEntry( { 'directory': self._BaseDir, 'filename': row[1], 'md5': row[0] } )
             
         # and return the number of entries read
         return  self.getNumberOfEntries()

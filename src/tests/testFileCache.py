@@ -118,8 +118,8 @@ class testFileCache(unittest.TestCase):
         
     def testRestoreCacheWithRelativeDir( self ):
         """ test reading from cache file while applying relative directory"""
-        FC = FileCache( TestRestoreDir )
-        self.assertEqual( FC.loadCache( BaseDir = RelLoadDir), len(TestRestoreDir_Entries)  )
+        FC = FileCache( TestRestoreDir, BaseDir = RelLoadDir )
+        self.assertEqual( FC.loadCache(), len(TestRestoreDir_Entries)  )
         self.assertEqual( FC.getEntry(), TestRestoreDirRelDir_Entries )
         
     def testSaveRestoreCache( self ):
