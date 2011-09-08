@@ -34,6 +34,9 @@ TestDirA_FileA_Entry = { 'filename': TestDirA_FileA, 'md5': TestDirA_FileA_md5 }
 # restore test data
 TestRestoreDir = './data_tmp/FileCache/RestoreDirlist/'
 TestRestoreDir_Entries = [{'md5': 'b9fe47a96c549d293adaff557ab64328', 'filename': 'asgeroth-080422.tgz'}]
+RelLoadDir = "RelLoadDir"
+TestRestoreDirRelDir_Entries = [{'directory': RelLoadDir, 'md5': 'b9fe47a96c549d293adaff557ab64328', 
+                           'filename': 'asgeroth-080422.tgz'}]
 
 # test save dirlist
 TestSaveDir = './data_tmp/FileCache/SaveDirlist/'
@@ -112,6 +115,12 @@ class testFileCache(unittest.TestCase):
         FC = FileCache( TestRestoreDir )
         self.assertEqual( FC.loadCache(), len(TestRestoreDir_Entries)  )
         self.assertEqual( FC.getEntry(), TestRestoreDir_Entries )
+        
+    def testRestoreCacheWithRelativeDir( self ):
+        """ test reading from cache file while applying relative directory"""
+        FC = FileCache( TestRestoreDir )
+        self.assertEqual( FC.loadCache( BaseDir = RelLoadDir), len(TestRestoreDir_Entries)  )
+        self.assertEqual( FC.getEntry(), TestRestoreDirRelDir_Entries )
         
     def testSaveRestoreCache( self ):
         """ test writing to and reading from cache file """

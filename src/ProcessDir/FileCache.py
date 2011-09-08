@@ -129,7 +129,7 @@ class FileCache:
         """ Removes all entries from the cache """
         self._FileCache = []
 
-    def loadCache( self, Filename = None ):
+    def loadCache( self, Filename = None, BaseDir = '.' ):
         """ loads data from file on disc and saves in the internal var  self._FileCache
         using filenames as keys 
         """
@@ -150,7 +150,7 @@ class FileCache:
                 raise ValueError( "Malformed cache file: " + FullCacheFilename)
                 
             # use filename as key
-            self.addEntry( { 'filename': row[1], 'md5': row[0] } )
+            self.addEntry( { 'directory': BaseDir, 'filename': row[1], 'md5': row[0] } )
             
         # and return the number of entries read
         return  self.getNumberOfEntries()
