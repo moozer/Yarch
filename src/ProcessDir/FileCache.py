@@ -56,6 +56,12 @@ class FileCache:
             raise StopIteration
         return self._FileCache[self._IteratorIndex -1]
     
+    def __getitem__(self, pos ):
+        if pos < 0 or pos >= len(self._FileCache ):
+            raise ValueError
+        
+        return self._FileCache[pos]
+    
     def __eq__( self, other ):
         """ the equality operator 
         
