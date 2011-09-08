@@ -145,7 +145,7 @@ class ProcessDir:
                     if self._UseCache:
                         Cache.saveCache() # save before new cache is initialized
                     CompleteCache += Cache
-                    Cache = FileCache( CurDir )
+                    Cache = FileCache( CurDir, BaseDir = os.path.relpath(CurDir, DirToProcess) )
                 try:
                     Cache.loadCache()
                 except IOError:

@@ -56,6 +56,16 @@ TestDirD_FileA_md5 = 'd1bf8fc6af9166875316587ad697a719'
 TestDirD_list = [   { 'md5': TestDirD_FileA_md5, 'filename': TestDirD_FileA, 
                      'duplicates': [], 'directory': '.' }]
 
+TestDirMultilevelDirsWithCache = TestcaseBaseDir + 'MultilevelDirsWithCache/'
+TestDirMultilevelDirsWithCache_list = [   
+                    { 'md5': TestDirB_SubdirA_FileA_md5, 'filename': TestDirB_SubdirA_FileA, 
+                     'duplicates': [], 'directory': SubDirA},
+                    { 'md5': TestDirB_SubdirA_FileB_md5, 'filename': TestDirB_SubdirA_FileB, 
+                     'duplicates': [], 'directory': SubDirA },
+                    { 'md5': TestDirB_SubdirA_FileA_md5, 'filename': TestDirB_SubdirA_FileA, 
+                     'duplicates': [], 'directory': SubDirB },
+                    { 'md5': TestDirB_SubdirA_FileB_md5, 'filename': TestDirB_SubdirA_FileB, 
+                     'duplicates': [], 'directory': SubDirB }]
 # progress indicator test function
 SavedList = []
 def SaveOutputToList( Entry ):
@@ -146,11 +156,22 @@ class testProcessDirWithCache(unittest.TestCase):
         res = PD2.Validate()
         self.assertEqual( res, False )
         
-    def testRecursiveWithCache( self ):
+    def testRecursiveUsingCache( self ):
         """ Check return value of multilevel dir tree with empty toplevel dir"""
         PD = ProcessDir( TestDirEmptyTopLevel )
         Res = PD.Process( UseCache=True )
         ExpRes = FileCache( Data = TestDirEmptyTopLevel_list )
+
+        Res.getAllEntries().sort(lambda x,y : cmp(x['directory'], y['directory']))
+          
+        self.assertEqual( Res.getNumberOfEntries(), ExpRes.getNumberOfEntries() )        
+        self.assertTrue( Res.getAllEntries() == ExpRes.getAllEntries() )
+
+    def testRecursiveWithCachefiles( self ):
+        """ Check return value of multilevel dir tree with empty toplevel dir"""
+        PD = ProcessDir( TestDirMultilevelDirsWithCache )
+        Res = PD.Process( UseCache=True )
+        ExpRes = FileCache( Data = TestDirMultilevelDirsWithCache_list )
 
         Res.getAllEntries().sort(lambda x,y : cmp(x['directory'], y['directory']))
           
