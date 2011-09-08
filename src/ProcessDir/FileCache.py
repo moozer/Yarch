@@ -36,7 +36,8 @@ class FileCache:
         self._Directory = Directory
         self._MandatoryKeys = ['filename', 'md5', 'directory']
         self._BaseDir = BaseDir
-
+        self._IteratorIndex = 0
+        
         if not os.path.isdir( Directory ):
             raise IOError( "Directory specified is not a directory: %s"% Directory )
         
@@ -45,7 +46,16 @@ class FileCache:
         if Data:
             for Entry in Data:
                 self.addEntry( Entry )
-        
+    
+    def __iter__(self):
+        return self
+    
+    def next(self):
+        self._IteratorIndex = self._IteratorIndex + 1
+        if self._IteratorIndex > len(self._FileCache):
+            raise StopIteration
+        return self._FileCache[self._IteratorIndex -1]
+    
     def __eq__( self, other ):
         """ the equality operator 
         

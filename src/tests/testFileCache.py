@@ -192,3 +192,13 @@ class testFileCache(unittest.TestCase):
         FC = FileCache( TestRestoreDir )
         self.assertEqual( TestRestoreDir, FC.GetDirectory() )
         
+    def testFileCacheIterator(self):
+        FC = FileCache( Data = TestSaveDir_list_complete )
+        
+        i=0
+        for entry in FC:
+            self.assertEqual( entry, TestSaveDir_list_complete[i])
+            i += 1
+            
+        
+            
