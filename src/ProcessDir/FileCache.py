@@ -24,8 +24,8 @@ import os, csv
 class FileCache:
     """ class to handle caching of md5 sums """
     
-    def __init__( self, Directory = '.', Data = None, 
-                  CacheFilename = '.md5dirlist', BaseDir = '.' ):
+    def __init__( self, Directory = '.', BaseDir = '.', Data = None, 
+                  CacheFilename = '.md5dirlist' ):
         """ class constructor 
         @param Directory: The directory to work in
         @param Data: Initial data to use (uses addEntry)  
