@@ -49,8 +49,8 @@ if __name__ == '__main__':
     if Manifest.getNumberOfEntries() != FileCount:
         print "Filecount and manifest size mismatch"
         print "Try deleting all .md5listdir cache files and try again"
-        print Manifest
         exit(2)
+        
     print "Saving manifest file"
     Manifest.saveCache( "%s.manifest"%(opt.SourceDir), UseFullPath = True )
     
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     # 4) validated the .md5listdir values
     print "Validating md5 values in archive"    
     FileCount = 0
-    ValidationSuccess = ProcessDir(opt.AccessDir).Validate( ValidateProgressFunction=ShowProgress)
+    ValidationSuccess = ProcessDir(AccessLink).Validate( ValidateProgressFunction=ShowProgress)
     print "\nValidation done. %d files checked"%FileCount
 
     if ValidationSuccess:
@@ -105,3 +105,5 @@ if __name__ == '__main__':
         exit( 3 )
         
     print "Done creating and validating squashfs archive"
+    
+    
