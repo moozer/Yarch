@@ -19,7 +19,9 @@ def ParseCmdLineOptions():
                       help="The directory to dump the squashfsfile to"  )                 
     parser.add_option( "-a", dest="AccessDir", default='/mnt/squashfs',
                        help="The directory where the squashfs file is accessible (done by automount)" )
- 
+    parser.add_option( "--showfiles",
+                  action="store_true", dest="showfiles", default=False,
+                  help="print all filenames to stdout (debug option)" )
     (options, args) =  parser.parse_args() #@UnusedVariable
     
     return options
@@ -31,10 +33,15 @@ def ShowProgress( InputDict ):
     global FileCount
     FileCount = FileCount +1
     print "\rFilecount %d"%(FileCount,),
+    if ShowAllFiles:
+        print "\t %s\n" % InputDict['filename']
                 
 if __name__ == '__main__':
     opt = ParseCmdLineOptions()
-    
+
+    global ShowAllFiles
+    ShowAllFiles = opt.showfiles
+     
     print "SquashDir"
     print "Parameters are %s"%(opt,)
     
@@ -61,7 +68,7 @@ if __name__ == '__main__':
     # This creates a squashfs with the current user as owner.
     # TODO: Uid mismatch when copying between PCs
     cmd = "mksquashfs %s %s -noappend" %(opt.SourceDir, SqfsFile)
-    #os.system(cmd)
+    os.system(cmd)
     
     AccessLink = os.path.join( opt.AccessDir, SqfsFileBase )
     cmd2 = "ln --symbolic %s %s" % (AccessLink, os.path.join(SourceTop, "%s.sqmnt"%(SqfsFileBase,) ))
