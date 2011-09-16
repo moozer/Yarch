@@ -4,7 +4,7 @@ Created on Sep 16, 2011
 @author: morten
 '''
 
-from MakeDirlist import MakeDirlist, ShowProgressAllFiles, ShowProgressSparse
+from PythonPathUtil import AppendSrcToPythonPath #@UnusedImport
 from ProcessDir.ProcessDir import ProcessDir
 import sys
 
