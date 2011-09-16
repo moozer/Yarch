@@ -2,12 +2,17 @@
 Created on Sep 6, 2011
 
 @author: morten
+
+
+
 '''
 from PythonPathUtil import AppendSrcToPythonPath #@UnusedImport
 from optparse import OptionParser
 from ProcessDir.ProcessDir import ProcessDir
 import sys, os
 from time import sleep
+from MakeDirlist import MakeDirlist, ShowProgressAllFiles, ShowProgressSparse
+
 
 def ParseCmdLineOptions():
     """ utility function to handle command line options. """
@@ -26,40 +31,25 @@ def ParseCmdLineOptions():
     
     return options
  
- 
-def ShowProgress( InputDict ):
-    #print "\r%s" %(InputDict['filename'], ),
-    #sys.stdout.flush()
-    global FileCount
-    FileCount = FileCount +1
-    print "\rFilecount %d"%(FileCount,),
-    if ShowAllFiles:
-        print "\t %s\n" % InputDict['filename']
                 
 if __name__ == '__main__':
     opt = ParseCmdLineOptions()
 
+
+    Config = { 'SourceDir': opt.SourceDir}
+    
+    if opt.showfiles:
+        Config['ProgressFunction'] = ShowProgressAllFiles
+    else:
+        Config['ProgressFunction'] = ShowProgressSparse
+        
     global ShowAllFiles
     ShowAllFiles = opt.showfiles
      
     print "SquashDir"
     print "Parameters are %s"%(opt,)
     
-    # 1) go though the directory and generate the .md5listdir files.
-    print "Processing filen in and below %s"%(opt.SourceDir,)
-    PD = ProcessDir(opt.SourceDir)
-    FileCount = 0
-    Manifest = PD.Process(UseCache=True, ProgressFunction=ShowProgress)
-    print "\rDone calculating md5 sums."
-    
-    # 1.1) save manifest for later...
-    if Manifest.getNumberOfEntries() != FileCount:
-        print "Filecount and manifest size mismatch"
-        print "Try deleting all .md5listdir cache files and try again"
-        exit(2)
-        
-    print "Saving manifest file"
-    Manifest.saveCache( "%s.manifest"%(opt.SourceDir), UseFullPath = True )
+    FileCount, Manifest = MakeDirlist(Config)
     
     # 2) squashfs the dir
     (SourceTop, SqfsFileBase) = os.path.split( opt.SourceDir )
