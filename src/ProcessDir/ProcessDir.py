@@ -75,7 +75,7 @@ class ProcessDir:
         self._CompareList = CompareList.getAllEntries()
         self._ProgressFunction = ProgressFunction
         self._UseCache = UseCache
-        self._LinksAreFatal = LinksAreFatal
+        self._FatalOnNonFile = LinksAreFatal
         self._Validate = Validate
         return self._ProcessDir( self._BaseDir )
 
@@ -97,8 +97,14 @@ class ProcessDir:
             return None
         
         FullFilename = os.path.join(CurDir, filename)
+        if not os.path.isfile(FullFilename):
+            if self._FatalOnNonFile:
+                raise IOError("File is not a regular file: " + FullFilename) 
+            else: 
+                return None # skip        
+        
         if os.path.islink(FullFilename):
-            if self._LinksAreFatal:
+            if self._FatalOnNonFile:
                 raise IOError("File is a link: " + FullFilename) 
             else: 
                 return None # skip
